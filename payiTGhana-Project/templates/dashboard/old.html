@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+	 {% for departments in department %}
+    <p>{{ departments.name }} : {{ departments.faculty }}</p>
+
+{% endfor %}
+{% endblock %}
