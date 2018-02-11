@@ -37,9 +37,9 @@
                     <div class="md-card">
                         <div class="md-card-content">
                             <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=" "><i class="sidebar-menu-icon material-icons md-36">account_balance</i></span></div>
-                            <span class="uk-text-muted uk-text-small">Owing - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
-                            <span class="uk-text-muted uk-text-small">Paid (live) - <span class="uk-text-bold uk-text-success ">GH5 </span></span>
-                        </div>
+                            <span class="uk-text-muted uk-text-small">Total Pledges - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
+                            <span class="uk-text-muted uk-text-small">Total Pledges - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
+                           </div>
                     </div>
                 </div>
 
@@ -48,8 +48,8 @@
                     <div class="md-card">
                         <div class="md-card-content">
                          <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
-                            <span class="uk-text-muted uk-text-small">Academic Calender</span>
-                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Semester 1 : Year 2014</span></h5>
+                            <span class="uk-text-muted uk-text-small">Coins in wallet</span>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success ">GHS0.0</span></h5>
                         </div>
                     </div>
                 </div>
@@ -58,8 +58,8 @@
                     <div class="md-card">
                         <div class="md-card-content">
                          <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
-                            <span class="uk-text-muted uk-text-small">Total Students</span>
-                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Students = 21 </span></h5>
+                            <span class="uk-text-muted uk-text-small">Total Matches</span>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Matches = 0 </span></h5>
                         </div>
                     </div>
                 </div>
@@ -78,10 +78,10 @@
                             <div class="uk-clearfix md-card-overlay-header">
                                 <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
                                 <h3 class="uk-text-center uk-text-upper">
-                                    TRANSCRIPTS
+                                  MATCHES
                                 </h3>
                             </div>
-                            Print Official transcript for students after they have paid at the Accounts Office
+                           View all your matches here
                         </div>
                     </div>
                 </div>
@@ -95,10 +95,10 @@
                             <div class="uk-clearfix md-card-overlay-header">
                                 <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
                                 <h3 class="uk-text-center uk-text-upper">
-                                   UPLOAD RESULTS
+                                  MAKE PLEDGE
                                 </h3>
                             </div>
-                            <p>Upload semester results here. Only registered students results can be uploaded</p>
+                            <p>Make pledges here</p>
                             <button class="md-btn md-btn-primary">More</button>
                         </div>
                     </div>
@@ -113,10 +113,10 @@
                             <div class="uk-clearfix md-card-overlay-header">
                                 <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
                                 <h3 class="uk-text-center uk-text-upper">
-                                  STAFF EMAILS
+                                MESSAGES
                                 </h3>
                             </div>
-                           Click to go access your emails
+                           Click to go access your sms
                         </div>
                     </div>
                 </div>
@@ -130,12 +130,12 @@
                                 </div>
                                 <div class="md-card-overlay-content">
                                     <div class="uk-clearfix md-card-overlay-header">
-                                        <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                         <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
                                         <h3>
-                                          CREATE USERS
+                                        <a href="{% url 'clientProfile' %}" > My Profile</a>
                                         </h3>
                                     </div>
-                                    Create a new user account
+                                   update my profile data
                                 </div>
                             </div>
                         </div>
@@ -148,10 +148,10 @@
                             <div class="uk-clearfix md-card-overlay-header">
                                 <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
                                 <h3 class="uk-text-center uk-text-upper">
-                                    CLASS LIST
+                                    TRANSACTIONS LOG
                                 </h3>
                             </div>
-                           View registered students for your courses and enter marks
+                           View my transactions
                         </div>
                     </div>
                 </div>
@@ -164,77 +164,18 @@
 
             <!-- tasks -->
             <div class="uk-grid" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
-                <div class="uk-width-medium-1-2">
+                 <div class="uk-width-medium-1-2">
                     <div class="md-card">
                         <div class="md-card-content">
-                            <div class="uk-overflow-container">
-                                <table class="uk-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="uk-text-nowrap">Level</th>
-                                            <th class="uk-text-nowrap">Students</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-
-                                        <tr class="uk-table-middle">
-                                            <td>Level 100 HND</td>
-                                            <td class=''>22</td>
-
-                                        </tr>
-                                      <tr class="uk-table-middle">
-                                            <td>Level 200 HND</td>
-                                            <td class=''>11</td>
-
-                                        </tr>
-                                      <tr class="uk-table-middle">
-                                            <td>Level 300 HND</td>
-                                            <td class=''>21</td>
-
-                                        </tr>
-
-                                         <tr class="uk-table-middle">
-                                            <td>Level 100 BTECH TOP UP</td>
-                                            <td class=''>32</td>
-
-                                        </tr>
-                                          <tr class="uk-table-middle">
-                                            <td>Level 200 BTECH TOP UP</td>
-                                            <td class=''>11</td>
-
-                                        </tr>
-
-                                        <tr class="uk-table-middle">
-                                            <td>Non Tertiary Level 100 </td>
-                                            <td class=''>21</td>
-
-                                        </tr>
-                                        <tr class="uk-table-middle">
-                                            <td>Non Tertiary Level 200</td>
-                                            <td class=''>1</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td><p style="uk-text-bold">Total</p></td>
-                                            <td></td>
-
-                                        </tr>
-
-                                    </tbody>
-
-                                    </tbody>
-                                </table>
-
-                            </div>
+                            <h3 class="heading_a uk-margin-bottom">Statistics</h3>
+                            <div id="ct-chart" class="chartist"></div>
                         </div>
                     </div>
                 </div>
                 <div class="uk-width-medium-1-2">
                     <div class="md-card">
                         <div class="md-card-content">
-                            <h3 class="heading_a uk-margin-bottom">Statistics</h3>
+                            <h3 class="heading_a uk-margin-bottom">Recent Transactions with PayitGH</h3>
                             <div id="ct-chart" class="chartist"></div>
                         </div>
                     </div>

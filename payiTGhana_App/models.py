@@ -64,3 +64,18 @@ class Match(models.Model):
     class Meta:
         ordering = ["created_at"]
 
+class Sms(models.Model):
+
+    id=models.AutoField(primary_key=True)
+    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    status =models.CharField(max_length=20)
+    message=models.CharField(max_length=200)
+    sender=models.CharField(max_length=90)
+    phone=models.CharField(max_length=20)
+    type=models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_at"]
+

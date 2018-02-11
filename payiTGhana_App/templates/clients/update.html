@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% load account_tags %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'assets/plugins/weather-icons/css/weather-icons.min.css' %}" media="all">
+    <!-- metrics graphics (charts) -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/metrics-graphics/dist/metricsgraphics.css' %}">
+    <!-- chartist -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/chartist/dist/chartist.min.css' %}">
+
+
+{% endblock %}
+
+{% block content %}
+    <h6 class="heading_b uk-margin-bottom">Update your profile</h6>
+    <div class="uk-width-xLarge-1-10">
+        <div class="md-card">
+
+            <form novalidate id="wizard_advanced_form" class="uk-form-stacked" action="" method="post"
+                  accept-charset="utf-8" name="updateForm" v-form>
+
+                {% csrf_token %}
+                <div data-uk-observe="" id="wizard_advanced" role="application" class="wizard clearfix">
+                    <div class="steps clearfix">
+                        <ul role="tablist">
+                            <li role="tab" class="fill_form_header first current" aria-disabled="false"
+                                aria-selected="true" v-bind:class="{ 'error' : !in_payment_section}">
+                                <a aria-controls="wizard_advanced-p-0" href="#wizard_advanced-h-0"
+                                   id="wizard_advanced-t-0">
+                                    <span class="current-info audible">current step: </span><span
+                                        class="number">1</span> <span class="title">Biodata</span>
+                                </a>
+                            </li>
+                            <li role="tab" class="payment_header disabled" aria-disabled="true"
+                                v-bind:class="{ 'error' : in_payment_section}">
+                                <a aria-controls="wizard_advanced-p-1" href="#wizard_advanced-h-1"
+                                   id="wizard_advanced-t-1">
+                                    <span class="number">2</span> <span class="title">Payment Info</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class=" clearfix "
+                         style="box-sizing: border-box;display: block;padding:15px!important;position: relative;">
+
+                        <!-- first section -->
+                        <section id="fill_form_section" role="tabpanel" aria-labelledby="fill form section"
+                                 class="body step-0 current" data-step="0" aria-hidden="false"
+                                 v-bind:class="{'uk-hidden': in_payment_section} ">
+
+                            <div data-uk-grid-margin=""
+                                 class="uk-grid uk-grid-width-medium-1-4 uk-grid-width-large-1-4">
+
+
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">First
+                                            Name :</label><input type="text" id="fname" name="fname" class="md-input"
+                                                                 required="required" v-model="fname" v-form-ctrl><span
+                                                class="md-input-bar"></span></div>
+                                        <p class=" uk-text-danger uk-text-small  "
+                                           v-if="updateForm.fname.$error.required">Please enter your first name</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <section id="payment_section" role="tabpanel" aria-labelledby="payment section"
+                                 class="body step-1 " v-bind:class="{'uk-hidden': !in_payment_section} " data-step="1"
+                                 aria-hidden="true">
+                            <h2 class="heading_a"></h2>
+
+
+                        </section>
+
+                    </div>
+                    <div class="actions clearfix ">
+                        <ul aria-label="Pagination" role="menu">
+                            <li class="button_previous " aria-disabled="true" v-on:click="go_to_fill_form_section()"
+                                v-show="in_payment_section==true">
+                                <a role="menuitem" href="#previous">
+                                    <i class="material-icons"></i> Previous
+                                </a>
+                            </li>
+                            <li class="button_next button" v-on:click="go_to_payment_section()" aria-hidden="false"
+                                aria-disabled="false">
+                                <a role="menuitem" href="#next">Next
+                                    <i class="material-icons">
+                                    </i>
+                                </a>
+                            </li>
+                            <li class="button_finish " aria-hidden="true"
+                                v-show="updateForm.$valid && in_payment_section==true">
+                                <input class="md-btn md-btn-primary uk-margin-small-top" type="submit"
+                                       name="submit_order" value="Submit" v-on:click="submit_form"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+
+            <div class="uk-modal" id="confirm_modal">
+                <div class="uk-modal-dialog" v-el:confirm_modal>
+                    <div class="uk-modal-header uk-text-large uk-text-success uk-text-center">Confirm Data</div>
+                    Are you certain of all the info
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}
+{% block js %}
+
+    <script>
+        $(document).ready(function () {
+            $('select').select2({width: "resolve"});
+
+
+        });
+
+
+    </script>
+    <script>
+
+
+        //code for ensuring vuejs can work with select2 select boxes
+        Vue.directive('select', {
+            twoWay: true,
+            priority: 1000,
+            params: ['options'],
+            bind: function () {
+                var self = this
+                $(this.el)
+                    .select2({
+                        data: this.params.options,
+                        width: "resolve"
+                    })
+                    .on('change', function () {
+                        self.vm.$set(this.name, this.value)
+                        Vue.set(self.vm.$data, this.name, this.value)
+                    })
+            },
+            update: function (newValue, oldValue) {
+                $(this.el).val(newValue).trigger('change')
+            },
+            unbind: function () {
+                $(this.el).off().select2('destroy')
+            }
+        })
+
+
+        var vm = new Vue({
+            el: "body",
+            ready: function () {
+            },
+            data: {
+
+
+                options: [],
+                in_payment_section: false,
+            },
+            methods: {
+                go_to_payment_section: function (event) {
+                    UIkit.modal.confirm(vm.$els.confirm_modal.innerHTML, function () {
+
+                        vm.$data.in_payment_section = true
+                    })
+
+                },
+                submit_form: function () {
+                    return (function (modal) {
+                        modal = UIkit.modal.blockUI("<div class='uk-text-center'>Saving Data<br/><img class='uk-thumbnail uk-margin-top' src='{!! url('assets/img/spinners/spinner_success.gif')  !!}' /></div>");
+                        setTimeout(function () {
+                            modal.hide()
+                        }, 50000)
+                    })();
+                },
+
+                go_to_fill_form_section: function (event) {
+                    vm.$data.in_payment_section = false
+                }
+            }
+        })
+
+    </script>
+{% endblock %}
