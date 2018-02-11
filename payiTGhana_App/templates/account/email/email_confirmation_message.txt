@@ -1,0 +1,10 @@
+{% load i18n account_tags %}
+
+{% blocktrans with site_name=current_site.name %}
+
+You have registered with payitGh.com  using this email address.
+
+To confirm this registration, go to {{ activate_url }}
+
+If you did not sign up for this site, you can ignore this message.
+{% endblocktrans %}

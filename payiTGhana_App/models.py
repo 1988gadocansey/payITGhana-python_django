@@ -16,6 +16,7 @@ class Client(models.Model):
      mobile_money_name = models.CharField(max_length=10,unique=True)
      address = models.CharField(max_length=100)
      date_joined =models.DateTimeField(auto_now_add=True, blank=True)
+     referrer =  models.CharField(max_length=100,null=True)
      user_id =  models.ForeignKey(User, unique=True,on_delete=models.CASCADE)
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)

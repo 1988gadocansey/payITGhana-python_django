@@ -61,7 +61,7 @@
         <nav class="uk-navbar">
             <div class="main_logo_top">
                 <a href="/dashboard"><img src="{% static 'assets/img/logo.png' %}" alt="" height="15" width="71"/></a>
-                <span class="" style="color:white">URPS-TTU</span>
+
 
             </div>
 
@@ -624,6 +624,9 @@
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+
+        $(".uk-alert-success").fadeOut(4000);
+        $(".uk-alert-danger").fadeOut(4000);
         $('.saves').on('click', function (e) {
 
 
@@ -771,6 +774,9 @@
 <!--  tablesorter functions -->
 <script src="{% static 'assets/js/pages/plugins_tablesorter.min.js' %}"></script>
 {#{% include 'session_security/all.html' %}#}
-
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content') }
+    });    </script>
 </body>
 </html>

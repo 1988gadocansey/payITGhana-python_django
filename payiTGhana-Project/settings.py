@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'payiTGhana_App',
     'django.contrib.sites',
     #'session_security'
-
+    'pinax_theme_bootstrap',
+    'bootstrapform'
 
 ]
 if DJANGO_MODE == 'local':
@@ -93,8 +94,10 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
+                'pinax_theme_bootstrap.context_processors.theme'
 
             ],
+
         },
     },
 ]
@@ -204,3 +207,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'gadocansey@gmail.com'
 EMAIL_HOST_PASSWORD = '1988gadocansey'
 EMAIL_PORT = 587
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+ACCOUNT_OPEN_SIGNUP = True
