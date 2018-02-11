@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
 
 from django.http import HttpResponse
-from .models import Department, Faculty
+from .models import Client
 from django.http import Http404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -21,9 +20,9 @@ class SignupView(account.views.SignupView):
 @login_required
 def dashboard(request):
     try:
-        department = Department.objects.order_by('name')
+        department = Client.objects.order_by('created_at')
         context = {'department': department}
-    except Department.DoesNotExist:
+    except Client.DoesNotExist:
         raise Http404("Department entity does not exist")
     return render(request, 'dashboard/index.html', context)
 def my_view(request):

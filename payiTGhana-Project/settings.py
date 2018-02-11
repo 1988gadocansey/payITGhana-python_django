@@ -42,17 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'django.contrib.humanize',
-    'report_builder',
     'gunicorn',
     "account",
     'django_user_agents',
     'payiTGhana_App',
     'django.contrib.sites',
-    'viewflow',
-    'viewflow.frontend',
-    'sudo',
+    #'session_security'
+
+
 ]
 if DJANGO_MODE == 'local':
     INSTALLED_APPS += (
@@ -75,6 +73,8 @@ MIDDLEWARE = [
     "account.middleware.TimezoneMiddleware",
     "account.middleware.ExpiredPasswordMiddleware",
     'django_user_agents.middleware.UserAgentMiddleware',
+    #'session_security.middleware.SessionSecurityMiddleware',
+
 ]
 SITE_ID = 1
 ROOT_URLCONF = 'payiTGhana-Project.urls'
@@ -93,6 +93,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -101,7 +102,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'payiTGhana-Project.wsgi.application'
 # cache alias will be used. Set to `None` to disable caching.
 USER_AGENTS_CACHE = 'default'
-ADMIN_SITE_HEADER = "PayiTGhana - Gadeksystems IncP"
 MEDIA_ROOT = '/avatars'
 MEDIA_URL='/media/'
 # Database
@@ -155,7 +155,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/dashboard'
+LOGIN_REDIRECT_URL = '/app/dashboard'
+LOGOUT_REDIRECT_URL = '/auth'
 STATIC_ROOT = '/staticfiles'
 
 STATICFILES_DIRS = (
@@ -163,11 +164,11 @@ STATICFILES_DIRS = (
 )
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 
-EMAIL_HOST = 'smtp.sendgrid.net',
-EMAIL_HOST_USER = os.getenv('SENDGRID_USERNAME')
-EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.sendgrid.net',
+# EMAIL_HOST_USER = os.getenv('SENDGRID_USERNAME')
+# EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
@@ -197,3 +198,9 @@ ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_PASSWORD_EXPIRY = 60*60*24*5  # seconds until pw expires, this example shows five days
 ACCOUNT_PASSWORD_USE_HISTORY = True
+LOGIN_URL = '/auth/'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'gadocansey@gmail.com'
+EMAIL_HOST_PASSWORD = '1988gadocansey'
+EMAIL_PORT = 587

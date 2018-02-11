@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% load staticfiles%}
+{% load humanize%}
+
+{% load account_tags %}
+{% block style %}
+ <link rel="stylesheet" href="{% static 'assets/plugins/weather-icons/css/weather-icons.min.css' %}" media="all">
+        <!-- metrics graphics (charts) -->
+        <link rel="stylesheet" href="{% static 'assets/plugins/metrics-graphics/dist/metricsgraphics.css' %}">
+        <!-- chartist -->
+        <link rel="stylesheet" href="{% static 'assets/plugins/chartist/dist/chartist.min.css' %}">
+
+
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+{% user_display request.user %}
+
+
+
+         <div class="uk-grid uk-grid-width-large-1-4 uk-grid-width-medium-1-2 uk-grid-medium uk-sortable ">
+                 <div>
+                    <div class="md-card">
+                        <div class="md-card-content">
+                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">access_time</i></span></div>
+                            <span class="uk-text-bold uk-text-small">Last Visit</span>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success">  {{ request.user.last_login|naturaltime|capfirst }}</span></h5>
+                        </div>
+                    </div>
+                </div>
+                  <div>
+                    <div class="md-card">
+                        <div class="md-card-content">
+                            <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=" "><i class="sidebar-menu-icon material-icons md-36">account_balance</i></span></div>
+                            <span class="uk-text-muted uk-text-small">Owing - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
+                            <span class="uk-text-muted uk-text-small">Paid (live) - <span class="uk-text-bold uk-text-success ">GH5 </span></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="md-card">
+                        <div class="md-card-content">
+                         <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
+                            <span class="uk-text-muted uk-text-small">Academic Calender</span>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Semester 1 : Year 2014</span></h5>
+                        </div>
+                    </div>
+                </div>
+
+             <div>
+                    <div class="md-card">
+                        <div class="md-card-content">
+                         <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
+                            <span class="uk-text-muted uk-text-small">Total Students</span>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Students = 21 </span></h5>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="uk-grid uk-grid-width-small-1-2 uk-grid-width-large-1-3 uk-grid-width-xlarge-1-5 uk-text-center uk-sortable sortable-handler" id="dashboard_sortable_cards" data-uk-sortable data-uk-grid-margin>
+
+                 <div>
+                    <div class="md-card md-card-hover md-card-overlay">
+                        <div class="md-card-content">
+                            <a  href={% url 'logout' %}>  <img src="{% static 'assets/img/dashboard/transcript.png' %}"/></a>
+                        </div>
+                        <div class="md-card-overlay-content">
+                            <div class="uk-clearfix md-card-overlay-header">
+                                <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                <h3 class="uk-text-center uk-text-upper">
+                                    TRANSCRIPTS
+                                </h3>
+                            </div>
+                            Print Official transcript for students after they have paid at the Accounts Office
+                        </div>
+                    </div>
+                </div>
+
+                   <div>
+                    <div class="md-card md-card-hover md-card-overlay">
+                        <div class="md-card-content">
+                            <a  href='#'>  <img src="{% static 'assets/img/dashboard/results.png' %}"/></a>
+                        </div>
+                        <div class="md-card-overlay-content">
+                            <div class="uk-clearfix md-card-overlay-header">
+                                <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                <h3 class="uk-text-center uk-text-upper">
+                                   UPLOAD RESULTS
+                                </h3>
+                            </div>
+                            <p>Upload semester results here. Only registered students results can be uploaded</p>
+                            <button class="md-btn md-btn-primary">More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="md-card md-card-hover md-card-overlay">
+                        <div class="md-card-content">
+                            <a  href='#'>  <img src="{% static 'assets/img/dashboard/email.png' %}"/></a>
+                        </div>
+                        <div class="md-card-overlay-content">
+                            <div class="uk-clearfix md-card-overlay-header">
+                                <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                <h3 class="uk-text-center uk-text-upper">
+                                  STAFF EMAILS
+                                </h3>
+                            </div>
+                           Click to go access your emails
+                        </div>
+                    </div>
+                </div>
+
+                         <div>
+                            <div class="md-card md-card-hover md-card-overlay">
+                                <div class="md-card-content">
+                                    <div class="epc_chart" data-percent="37" data-bar-color="#607d8b">
+                                        <span class="epc_chart_icon"><i class="material-icons">&#xE7FE;</i></span>
+                                    </div>
+                                </div>
+                                <div class="md-card-overlay-content">
+                                    <div class="uk-clearfix md-card-overlay-header">
+                                        <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                        <h3>
+                                          CREATE USERS
+                                        </h3>
+                                    </div>
+                                    Create a new user account
+                                </div>
+                            </div>
+                        </div>
+            <div>
+                     <div class="md-card md-card-hover md-card-overlay">
+                        <div class="md-card-content">
+                            <a  href='#'>  <img src="{% static '/assets/img/dashboard/classlist.png' %}"/></a>
+                        </div>
+                        <div class="md-card-overlay-content">
+                            <div class="uk-clearfix md-card-overlay-header">
+                                <i class="md-icon material-icons md-card-overlay-toggler">&#xE5D4;</i>
+                                <h3 class="uk-text-center uk-text-upper">
+                                    CLASS LIST
+                                </h3>
+                            </div>
+                           View registered students for your courses and enter marks
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+            <!-- tasks -->
+            <div class="uk-grid" data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
+                <div class="uk-width-medium-1-2">
+                    <div class="md-card">
+                        <div class="md-card-content">
+                            <div class="uk-overflow-container">
+                                <table class="uk-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="uk-text-nowrap">Level</th>
+                                            <th class="uk-text-nowrap">Students</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                        <tr class="uk-table-middle">
+                                            <td>Level 100 HND</td>
+                                            <td class=''>22</td>
+
+                                        </tr>
+                                      <tr class="uk-table-middle">
+                                            <td>Level 200 HND</td>
+                                            <td class=''>11</td>
+
+                                        </tr>
+                                      <tr class="uk-table-middle">
+                                            <td>Level 300 HND</td>
+                                            <td class=''>21</td>
+
+                                        </tr>
+
+                                         <tr class="uk-table-middle">
+                                            <td>Level 100 BTECH TOP UP</td>
+                                            <td class=''>32</td>
+
+                                        </tr>
+                                          <tr class="uk-table-middle">
+                                            <td>Level 200 BTECH TOP UP</td>
+                                            <td class=''>11</td>
+
+                                        </tr>
+
+                                        <tr class="uk-table-middle">
+                                            <td>Non Tertiary Level 100 </td>
+                                            <td class=''>21</td>
+
+                                        </tr>
+                                        <tr class="uk-table-middle">
+                                            <td>Non Tertiary Level 200</td>
+                                            <td class=''>1</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><p style="uk-text-bold">Total</p></td>
+                                            <td></td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2">
+                    <div class="md-card">
+                        <div class="md-card-content">
+                            <h3 class="heading_a uk-margin-bottom">Statistics</h3>
+                            <div id="ct-chart" class="chartist"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+{% block js %}
+
+        <script src="{% static 'assets/plugins/d3/d3.min.js' %}"></script>
+        <!-- metrics graphics (charts) -->
+        <script src="{% static 'assets/plugins/metrics-graphics/dist/metricsgraphics.min.js' %}"></script>
+        <!-- chartist (charts) -->
+        <script src="{% static 'assets/plugins/chartist/dist/chartist.min.js' %}"></script>
+        <!-- maplace (google maps) -->
+          <script src="{% static 'assets/plugins/maplace-js/dist/maplace.min.js' %}"></script>
+        <!-- peity (small charts) -->
+        <script src="{% static 'assets/plugins/peity/jquery.peity.min.js' %}"></script>
+        <!-- easy-pie-chart (circular statistics) -->
+        <script src="{% static 'assets/plugins/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js' %}"></script>
+        <!-- countUp -->
+        <script src="{% static 'assets/plugins/countUp.js/dist/countUp.min.js' %}"></script>
+        <!-- handlebars.js -->
+        <script src="{% static 'assets/plugins/handlebars/handlebars.min.js' %}"></script>
+        <script src="{% static 'assets/js/custom/handlebars_helpers.min.js' %}"></script>
+        <!-- CLNDR -->
+        <script src="{% static 'assets/plugins/clndr/clndr.min.js' %}"></script>
+        <!-- fitvids -->
+        <script src="{% static 'assets/plugins/fitvids/jquery.fitvids.js' %}"></script>
+
+        <!--  dashbord functions -->
+        <script src="{% static 'assets/js/pages/dashboard.min.js' %}"></script>
+{% endblock %}

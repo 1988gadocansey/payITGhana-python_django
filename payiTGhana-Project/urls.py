@@ -13,20 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from rest_framework import routers
+from django.urls import path
 import debug_toolbar
 
-router = routers.DefaultRouter()
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-url(r'^logout/$', auth_views.logout, {'next_page': '/erp'}, name='logout'),
+url(r'^logout/$', auth_views.logout, {'next_page': '/auth'}, name='logout'),
     url(r'^auth/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    path('app/', include('payiTGhana_App.urls')),
+    url(r"^account/", include("account.urls")),
+
 ]
 
 urlpatterns += [
