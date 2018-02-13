@@ -1,2 +1,2 @@
 {% load i18n %}
-{{ site.name }} {% trans "Account Request" %}
+payitgh.com:8000 {% trans "Account Request" %}
