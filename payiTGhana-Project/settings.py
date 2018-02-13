@@ -212,4 +212,4 @@ EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'payitgh.com<noreply@payitgh.com>'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 ACCOUNT_OPEN_SIGNUP = True
-DEFAULT_DOMAIN = '127.0.0.1'
+ACCOUNT_TIMEZONES='Africa/Accra'
