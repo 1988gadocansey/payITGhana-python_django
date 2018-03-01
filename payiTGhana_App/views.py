@@ -6,15 +6,12 @@ from django.http import Http404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import account.views
-from django.contrib.auth import login, authenticate
-from .forms import SignupForm
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from .tokens import account_activation_token
-from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
+from django.utils import timezone
+from django.http import HttpResponseRedirect
+from .forms import ClientUpdate
+from django.contrib import messages
+from django.shortcuts import get_object_or_404
+
 class SignupView(account.views.SignupView):
 
     def after_signup(self, form):
@@ -62,11 +59,39 @@ def my_view(request):
 
 def clientProfile(request):
     current_user = request.user
+    if request.method == "POST":
 
-    try:
-        client = Client.objects.all().select_related("user_id")[0: 1]
-        context = {'data': client}
-    except Client.DoesNotExist:
-        raise Http404("Client entity does not exist")
-    return render(request, 'clients/update.html', context)
+            client = Client()
+            client.phone= request.POST.get('phone')
+            client.firstname=request.POST.get('firstname')
+            client.lastname=request.POST.get('lastname')
+            client.gender=request.POST.get('gender')
+            client.mobile_money_name=request.POST.get('mobile_money_name')
+            client.mobile_money_phone=request.POST.get('mobile_money_phone')
+            client.user_id = current_user
+            client.email = request.POST.get('email')
+            client.address = request.POST.get('address')
+            client.referrer = request.POST.get('referrer')
+            client.date_joined=timezone.now()
+
+            client.save()
+            messages.success(request, 'Form submission successful')
+
+            return HttpResponseRedirect('/app/dashboard/')
+
+    else:
+            #client=Client.objects.get(pk=current_user.id)
+            client=Client.objects.get(user_id=current_user.id)
+            context = {'client': client}
+
+
+            if client:
+
+                return render(request, 'clients/update.html',context )
+            else:
+                return render(request, 'clients/update.html')
+
+
+
+
 

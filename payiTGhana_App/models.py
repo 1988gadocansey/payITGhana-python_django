@@ -5,15 +5,16 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible  # only if you need to support Python 2
 
 class Client(models.Model):
+
      id = models.AutoField(primary_key=True)
-     code = models.CharField(max_length=100)
+    # code = models.CharField(max_length=100)
      firstname= models.CharField(max_length=100)
      lastname= models.CharField(max_length=100)
      gender= models.CharField(max_length=10)
      phone= models.IntegerField(max_length=10,unique=True)
      mobile_money_phone= models.IntegerField(max_length=10,unique=True)
      email=models.EmailField(unique=True)
-     mobile_money_name = models.CharField(max_length=10,unique=True)
+     mobile_money_name = models.CharField(max_length=100,unique=True)
      address = models.CharField(max_length=100)
      date_joined =models.DateTimeField(auto_now_add=True, blank=True)
      referrer =  models.CharField(max_length=100,null=True)

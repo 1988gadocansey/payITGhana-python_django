@@ -28,7 +28,7 @@ if DJANGO_MODE == 'local':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['payitgh.com','127.0.0.1']
 
 INTERNAL_IPS = ('127.0.0.1','::1', '0.0.0.0')
 
@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     #'session_security'
     'pinax_theme_bootstrap',
-    'bootstrapform'
+    'bootstrapform',
+	#'urlauth'
 
 ]
 if DJANGO_MODE == 'local':
@@ -76,7 +77,6 @@ MIDDLEWARE = [
     'django_user_agents.middleware.UserAgentMiddleware',
     #'session_security.middleware.SessionSecurityMiddleware',
 
-
 ]
 SITE_ID = 1
 ROOT_URLCONF = 'payiTGhana-Project.urls'
@@ -95,7 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
-                ''
+                'pinax_theme_bootstrap.context_processors.theme'
 
             ],
 
@@ -119,7 +119,7 @@ DATABASES = {
 			'NAME': 'payItGhana',
 			'USER': 'postgres',
 			'PASSWORD': 'PRINT45dull',
-			'HOST': '127.0.0.1',
+			'HOST': 'localhost',
 			'PORT': '5432',
 		}
 }
@@ -159,10 +159,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+#LOGIN_REDIRECT_URL = '/app/dashboard'
 LOGIN_REDIRECT_URL = '/app/client/profile/'
 LOGOUT_REDIRECT_URL = '/auth'
 STATIC_ROOT = '/staticfiles'
-
+ACCOUNT_LOGIN_URL='/auth/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'payiTGhana_App', 'static'),
 )
@@ -203,13 +204,12 @@ ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_PASSWORD_EXPIRY = 60*60*24*5  # seconds until pw expires, this example shows five days
 ACCOUNT_PASSWORD_USE_HISTORY = True
 LOGIN_URL = '/auth/'
-ACCOUNT_LOGIN_URL='/auth/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'gadocansey@gmail.com'
 EMAIL_HOST_PASSWORD = '1988gadocansey'
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'payitgh.com<noreply@payitgh.com>'
+#DEFAULT_EMAIL_FROM = 'admin@payitgh.com'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 ACCOUNT_OPEN_SIGNUP = True
-ACCOUNT_TIMEZONES='Africa/Accra'
+DEFAULT_FROM_EMAIL = 'payitgh.com<noreply@payitgh.com>'

@@ -4,24 +4,29 @@
 
 {% load account_tags %}
 {% block style %}
-    <link rel="stylesheet" href="{% static 'assets/plugins/weather-icons/css/weather-icons.min.css' %}" media="all">
-    <!-- metrics graphics (charts) -->
-    <link rel="stylesheet" href="{% static 'assets/plugins/metrics-graphics/dist/metricsgraphics.css' %}">
-    <!-- chartist -->
-    <link rel="stylesheet" href="{% static 'assets/plugins/chartist/dist/chartist.min.css' %}">
 
 
-{% endblock %}
+
+
+    {% endblock %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 
 {% block content %}
     <h6 class="heading_b uk-margin-bottom">Update your profile</h6>
     <div class="uk-width-xLarge-1-10">
         <div class="md-card">
 
-            <form novalidate id="wizard_advanced_form" class="uk-form-stacked" action="" method="post"
+            <form novalidate id="wizard_advanced_form" class="uk-form-stacked"   method="post"
                   accept-charset="utf-8" name="updateForm" v-form>
-
                 {% csrf_token %}
+
                 <div data-uk-observe="" id="wizard_advanced" role="application" class="wizard clearfix">
                     <div class="steps clearfix">
                         <ul role="tablist">
@@ -30,25 +35,19 @@
                                 <a aria-controls="wizard_advanced-p-0" href="#wizard_advanced-h-0"
                                    id="wizard_advanced-t-0">
                                     <span class="current-info audible">current step: </span><span
-                                        class="number">1</span> <span class="title">Biodata</span>
+                                        class="number">1</span> <span class="title">Client Info Update</span>
                                 </a>
                             </li>
-                            <li role="tab" class="payment_header disabled" aria-disabled="true"
-                                v-bind:class="{ 'error' : in_payment_section}">
-                                <a aria-controls="wizard_advanced-p-1" href="#wizard_advanced-h-1"
-                                   id="wizard_advanced-t-1">
-                                    <span class="number">2</span> <span class="title">Payment Info</span>
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                     <div class=" clearfix "
                          style="box-sizing: border-box;display: block;padding:15px!important;position: relative;">
 
-                        <!-- first section -->
                         <section id="fill_form_section" role="tabpanel" aria-labelledby="fill form section"
                                  class="body step-0 current" data-step="0" aria-hidden="false"
                                  v-bind:class="{'uk-hidden': in_payment_section} ">
+
 
                             <div data-uk-grid-margin=""
                                  class="uk-grid uk-grid-width-medium-1-4 uk-grid-width-large-1-4">
@@ -58,52 +57,169 @@
                                     <div class="uk-input-group">
 
                                         <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">First
-                                            Name :</label><input type="text" id="fname" name="fname" class="md-input"
-                                                                 required="required" v-model="fname" v-form-ctrl><span
+                                            Name</label><input type="text" id="firstname" required name="firstname"
+                                                               class="md-input" v-model="firstname" v-form-ctrl><span
                                                 class="md-input-bar"></span></div>
+
                                         <p class=" uk-text-danger uk-text-small  "
-                                           v-if="updateForm.fname.$error.required">Please enter your first name</p>
+                                           v-if="updateForm.firstname.$error.required">Please provide your firstname</p>
+
                                     </div>
                                 </div>
 
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">Last
+                                            Name :</label><input type="text" id="lastname" name="lastname"
+                                                                 class="md-input" required="required" v-model="lastname"
+                                                                 v-form-ctrl><span class="md-input-bar"></span></div>
+                                        <p class=" uk-text-danger uk-text-small  "
+                                           v-if="updateForm.lastname.$error.required">Please enter your surname</p>
+                                    </div>
+                                </div>
+
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_skype">Gender
+                                            :</label>
+                                            <p></p>
+                                            <select class="md-input" name="gender" id="gender"  >
+                                                <option value="">select gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+
+                                            <span class="md-input-bar"></span>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
                             </div>
 
+
+                            <div data-uk-grid-margin=""
+                                 class="uk-grid uk-grid-width-medium-1-4 uk-grid-width-large-1-4">
+
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">Phone
+                                            N<u>o</u> :</label><input type="text" id="phone" name="phone"
+                                                                      class="md-input" data-parsley-type="digits"
+                                                                      minlength="10" required="required" maxlength="10"
+                                                                      pattern='^[0-9]{10}$' v-model="phone" v-form-ctrl><span
+                                                class="md-input-bar"></span></div>
+                                        <p class=" uk-text-danger uk-text-small  " v-if="updateForm.phone.$invalid">
+                                            Please enter a valid phone number of 10 digits</p>
+                                    </div>
+                                </div>
+
+
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">Mobile
+                                            Money Number N<u>o</u> :</label><input type="text" id="mobile_money_phone"
+                                                                                   name="mobile_money_phone"
+                                                                                   class="md-input"
+                                                                                   data-parsley-type="digits"
+                                                                                   minlength="10" required="required"
+                                                                                   maxlength="10" pattern='^[0-9]{10}$'
+                                                                                   v-model="mobile_money_phone"
+                                                                                   v-form-ctrl><span
+                                                class="md-input-bar"></span></div>
+                                        <p class=" uk-text-danger uk-text-small  "
+                                           v-if="updateForm.mobile_money_phone.$invalid">Please enter a valid phone
+                                            number of 10 digits</p>
+                                    </div>
+                                </div>
+
+                                <div class="parsley-row">
+                                    <div class="uk-input-group">
+
+                                        <div class="md-input-wrapper md-input-filled"><label for="wizard_referer">Mobile
+                                            Money Name :</label><input type="text" id="mobile_money_name"
+                                                                       name="mobile_money_name" class="md-input"
+                                                                       required="required" v-model="mobile_money_name"
+                                                                       v-form-ctrl><span class="md-input-bar"></span>
+                                        </div>
+                                        <p class=" uk-text-danger uk-text-small  "
+                                           v-if="updateForm.mobile_money_name.$error.required">Please provide mobile
+                                            money name</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                              <div data-uk-grid-margin=""
+                                     class="uk-grid uk-grid-width-medium-1-4 uk-grid-width-large-1-4">
+
+
+                                    <div class="parsley-row">
+                                        <div class="uk-input-group">
+
+                                            <div class="md-input-wrapper md-input-filled"><label for="wizard_email">Email
+                                                :</label><input type="email" id="email" name="email" class="md-input"
+                                                                v-model="email" v-form-ctrl><span
+                                                    class="md-input-bar"></span></div>
+                                            <p class="uk-text-danger uk-text-small " v-if="updateForm.email.$invalid">
+                                                Please enter a valid email address</p>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="parsley-row">
+                                        <div class="uk-input-group">
+
+                                            <div class="md-input-wrapper md-input-filled"><label for="wizard_email">﻿Referrer
+                                                :</label><input type="text" id="referrer" v-model="referrer" v-form-ctrl name="referrer"
+                                                                class="md-input"><span class="md-input-bar"></span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="parsley-row">
+                                        <div class="uk-input-group">
+
+                                            <div class="md-input-wrapper md-input-filled"><label for="wizard_email">Address
+                                                :</label><input type="text" id="address" v-model="address"  name="address"
+                                                                class="md-input"><span class="md-input-bar"></span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            <input type="hidden" value="{{user.id}}" name="user_id_id"/>
                         </section>
 
 
-                        <section id="payment_section" role="tabpanel" aria-labelledby="payment section"
-                                 class="body step-1 " v-bind:class="{'uk-hidden': !in_payment_section} " data-step="1"
-                                 aria-hidden="true">
-                            <h2 class="heading_a"></h2>
-
-
-                        </section>
 
                     </div>
-                    <div class="actions clearfix ">
-                        <ul aria-label="Pagination" role="menu">
-                            <li class="button_previous " aria-disabled="true" v-on:click="go_to_fill_form_section()"
-                                v-show="in_payment_section==true">
-                                <a role="menuitem" href="#previous">
-                                    <i class="material-icons"></i> Previous
-                                </a>
-                            </li>
-                            <li class="button_next button" v-on:click="go_to_payment_section()" aria-hidden="false"
-                                aria-disabled="false">
-                                <a role="menuitem" href="#next">Next
-                                    <i class="material-icons">
-                                    </i>
-                                </a>
-                            </li>
-                            <li class="button_finish " aria-hidden="true"
-                                v-show="updateForm.$valid && in_payment_section==true">
-                                <input class="md-btn md-btn-primary uk-margin-small-top" type="submit"
-                                       name="submit_order" value="Submit" v-on:click="submit_form"/>
-                            </li>
-                        </ul>
-                    </div>
+                    {% if not client.address %}
+                        <div class="actions clearfix ">
+                            <ul aria-label="Pagination" role="menu">
+
+                                <li class="button_finish " aria-hidden="true"
+                                    v-show="updateForm.$valid">
+                                    <input class="md-btn md-btn-primary uk-margin-small-top" type="submit"
+                                           name="submit_order" value="Save" v-on:click="submit_form"/>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
             </form>
+
 
             <div class="uk-modal" id="confirm_modal">
                 <div class="uk-modal-dialog" v-el:confirm_modal>
@@ -173,32 +289,19 @@
             ready: function () {
             },
             data: {
+                firstname: "{{client.firstname }}",
+                lastname: "{{client.lastname }}",
+                phone: "0{{client.phone }}",
+                gender: "{{client.gender }}",
+                address: "{{client.address }}",
+                referrer: "{{client.referrer }}",
+                email: "{{client.email }}",
+                mobile_money_phone: "0{{client.mobile_money_phone }}",
+                mobile_money_name: "{{client.mobile_money_name}}",
 
+                options: []
 
-                options: [],
-                in_payment_section: false,
             },
-            methods: {
-                go_to_payment_section: function (event) {
-                    UIkit.modal.confirm(vm.$els.confirm_modal.innerHTML, function () {
-
-                        vm.$data.in_payment_section = true
-                    })
-
-                },
-                submit_form: function () {
-                    return (function (modal) {
-                        modal = UIkit.modal.blockUI("<div class='uk-text-center'>Saving Data<br/><img class='uk-thumbnail uk-margin-top' src='{!! url('assets/img/spinners/spinner_success.gif')  !!}' /></div>");
-                        setTimeout(function () {
-                            modal.hide()
-                        }, 50000)
-                    })();
-                },
-
-                go_to_fill_form_section: function (event) {
-                    vm.$data.in_payment_section = false
-                }
-            }
         })
 
     </script>
