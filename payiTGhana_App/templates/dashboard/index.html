@@ -19,7 +19,14 @@
 
 
 
-{% user_display request.user %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div   style="text-align: center"{% if message.tags %} class="uk-alert"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </ul>
+
+{% endif %}
 
 
 

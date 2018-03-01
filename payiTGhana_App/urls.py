@@ -13,6 +13,8 @@ urlpatterns = [
 
    url(r'^dashboard/$',  views.dashboard, name='dashboard'),
    url(r'^client/profile/$',  views.clientProfile, name='clientProfile'),
+   url(r'^client/pledge/$',  views.pledge, name='pledge'),
+   url(r'^client/pledges/$',  views.pledges, name='pledges'),
 
 
 ]

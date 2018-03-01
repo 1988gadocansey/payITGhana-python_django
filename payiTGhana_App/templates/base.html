@@ -217,10 +217,11 @@
 
                 <li data-uk-dropdown class="uk-hidden-small">
                     <a href="#"><i
-                            class="sidebar-menu-icon material-icons md-18">school</i><span>Make Pleges</span></a>
+                            class="sidebar-menu-icon material-icons md-18">school</i><span>Pleges</span></a>
                     <div class="uk-dropdown uk-dropdown-scrollable">
                         <ul class="uk-nav uk-nav-dropdown">
-                            <li><a href='#'>Students</a></li>
+                            <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
+                            <li><a href='{% url 'pledges' %}'>My Pledges</a></li>
 
 
                         </ul>
@@ -592,7 +593,7 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
 
-        $(".uk-alert-success").fadeOut(4000);
+        $(".uk-alert").fadeOut(4000);
         $(".uk-alert-danger").fadeOut(4000);
         $('.saves').on('click', function (e) {
 
@@ -626,6 +627,8 @@
         });
 
     });
+     $(".success").fadeOut(4000);
+        $(".uk-alert-danger").fadeOut(4000);
 
     function printDiv(divID) {
         //Get the HTML of div

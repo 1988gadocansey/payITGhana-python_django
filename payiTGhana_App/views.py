@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 
 from django.http import HttpResponse
-from .models import Client
+from .models import Client,Pledge
 from django.http import Http404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,12 @@ from django.http import HttpResponseRedirect
 from .forms import ClientUpdate
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+import uuid
+from datetime import datetime
+from datetime import timedelta
+from django.db.models import Q
+from django.core.paginator import Paginator , EmptyPage, PageNotAnInteger
+
 
 class SignupView(account.views.SignupView):
 
@@ -90,6 +96,55 @@ def clientProfile(request):
                 return render(request, 'clients/update.html',context )
             else:
                 return render(request, 'clients/update.html')
+
+
+
+def pledge(request):
+    if request.method == "POST":
+        maturity= datetime.now() + timedelta(days=10)
+
+        current_user = request.user
+        client = Client.objects.get(user_id=current_user.id)
+
+
+        pledge = Pledge()
+        pledge.pledged_amount = request.POST.get('amount')
+        pledge.pledge_maker_id= client
+        pledge.payment_confirm="Unconfirmed"
+        pledge.transaction_code=str(uuid.uuid4())[:8]
+        pledge.status=0
+        pledge.payment_deadline=timezone.now()
+        pledge.repledged=0
+        pledge.matched=0
+        pledge.payment_deadline=maturity
+        pledge.maturity_date=maturity
+        pledge.save()
+        messages.success(request, 'Pledge created successfully')
+
+        return HttpResponseRedirect('/app/dashboard/')
+
+    else:
+
+        return render(request, 'pledges/make.html')
+
+
+def pledges(request):
+    page = request.GET.get('page', 1)
+    current_user = request.user
+    client = Client.objects.get(user_id=current_user.id)
+    data=Pledge.objects.filter(Q(pledge_maker_id=client) | Q(pledge_maker_id=client)).order_by('-id').all()
+    paginator = Paginator(data, 50)
+
+    try:
+        records = paginator.page(page)
+    except PageNotAnInteger:
+        records = paginator.page(1)
+    except EmptyPage:
+        records = paginator.page(paginator.num_pages)
+
+    return render(request, 'pledges/index.html', {'data': records})
+
+
 
 
 

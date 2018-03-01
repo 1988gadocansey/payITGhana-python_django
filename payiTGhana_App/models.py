@@ -35,9 +35,9 @@ class Pledge(models.Model):
     pledge_maker_id=models.ForeignKey(Client, on_delete=models.CASCADE)
 
     pledged_amount= models.DecimalField(max_digits=20, decimal_places=2)
-    payment_confirm=models.IntegerField()
+    payment_confirm=models.CharField(max_length=20)
     payment_deadline=models.DateTimeField()
-    maturity_date=models.DateField()
+    maturity_date=models.DateTimeField()
     transaction_code=models.CharField(unique=True,max_length=10)
     status=models.IntegerField()
     matched=models.IntegerField()
