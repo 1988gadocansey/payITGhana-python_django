@@ -14,7 +14,9 @@ urlpatterns = [
    url(r'^dashboard/$',  views.dashboard, name='dashboard'),
    url(r'^client/profile/$',  views.clientProfile, name='clientProfile'),
    url(r'^client/pledge/$',  views.pledge, name='pledge'),
+   url(r'^task/match/$',  views.match, name='match'),
    url(r'^client/pledges/$',  views.pledges, name='pledges'),
+   url(r'^(?P<object_id>[0-9]+)/delete_pledge/$',views.delete_pledge, name='delete-pledge')
 
 
 ]

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
 from .models import Client,Pledge
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import account.views
 from django.utils import timezone
@@ -62,11 +62,11 @@ def my_view(request):
     request.user_agent.device.family  # returns 'iPhone'
 
     return HttpResponse(str(request.user_agent.os ))
-
+@login_required
 def clientProfile(request):
     current_user = request.user
     if request.method == "POST":
-
+        try:
             client = Client()
             client.phone= request.POST.get('phone')
             client.firstname=request.POST.get('firstname')
@@ -85,20 +85,29 @@ def clientProfile(request):
 
             return HttpResponseRedirect('/app/dashboard/')
 
+        except:
+            messages.error(request, 'Mobile Number or Email already exist')
+            return render(request, 'clients/update.html')
+
+
     else:
             #client=Client.objects.get(pk=current_user.id)
-            client=Client.objects.get(user_id=current_user.id)
-            context = {'client': client}
-
-
-            if client:
-
-                return render(request, 'clients/update.html',context )
-            else:
-                return render(request, 'clients/update.html')
+            try:
+                 client=Client.objects.get(user_id=current_user.id)
 
 
 
+                 context = {'client': client}
+
+                 return render(request, 'clients/update.html',context )
+
+
+            except:
+
+                 return render(request, 'clients/update.html')
+
+
+@login_required
 def pledge(request):
     if request.method == "POST":
         maturity= datetime.now() + timedelta(days=10)
@@ -121,13 +130,13 @@ def pledge(request):
         pledge.save()
         messages.success(request, 'Pledge created successfully')
 
-        return HttpResponseRedirect('/app/dashboard/')
+        return redirect('pledges')
 
     else:
 
         return render(request, 'pledges/make.html')
 
-
+@login_required
 def pledges(request):
     page = request.GET.get('page', 1)
     current_user = request.user
@@ -144,8 +153,21 @@ def pledges(request):
 
     return render(request, 'pledges/index.html', {'data': records})
 
+@login_required
+# def delete_pledge(request):
+#     current_user = request.user
+#     client = Client.objects.get(user_id=current_user.id)
+#     data = Pledge.filter(id=id).filter(pledge_maker_id=current_user.id).delete()
+#     messages.success(request, 'Pledge deleted successfully')
+#
+#     return redirect('pledges')
 
+def delete_pledge(request, object_id):
+    object = get_object_or_404(Pledge, pk=object_id)
+    object.delete()
+    messages.success(request, 'Pledge deleted successfully')
 
+    return redirect('pledges')
 
 
 

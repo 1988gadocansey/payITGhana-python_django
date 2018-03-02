@@ -42,7 +42,7 @@ class Pledge(models.Model):
     status=models.IntegerField()
     matched=models.IntegerField()
     repledged=models.IntegerField()
-    #pledge_receiver_id=models.ForeignKey(Client,on_delete=models.CASCADE)
+    pledge_receiver_id=models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
