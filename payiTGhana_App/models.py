@@ -11,14 +11,14 @@ class Client(models.Model):
      firstname= models.CharField(max_length=100)
      lastname= models.CharField(max_length=100)
      gender= models.CharField(max_length=10)
-     phone= models.IntegerField(max_length=10,unique=True)
-     mobile_money_phone= models.IntegerField(max_length=10,unique=True)
+     phone= models.IntegerField(unique=True)
+     mobile_money_phone= models.IntegerField(unique=True)
      email=models.EmailField(unique=True)
      mobile_money_name = models.CharField(max_length=100,unique=True)
      address = models.CharField(max_length=100)
      date_joined =models.DateTimeField(auto_now_add=True, blank=True)
      referrer =  models.CharField(max_length=100,null=True)
-     user_id =  models.ForeignKey(User, unique=True,on_delete=models.CASCADE)
+     user_id =  models.OneToOneField(User,on_delete=models.CASCADE)
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)
 
@@ -32,7 +32,7 @@ class Client(models.Model):
 class Pledge(models.Model):
 
     id=models.AutoField(primary_key=True)
-    pledge_maker_id=models.ForeignKey(Client, on_delete=models.CASCADE)
+    pledge_maker_id=models.OneToOneField(Client, on_delete=models.CASCADE)
 
     pledged_amount= models.DecimalField(max_digits=20, decimal_places=2)
     payment_confirm=models.CharField(max_length=20)
@@ -53,8 +53,8 @@ class Pledge(models.Model):
 class Match(models.Model):
 
     id=models.AutoField(primary_key=True)
-    pledge_id = models.ForeignKey(Pledge, on_delete=models.CASCADE)
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    pledge_id = models.OneToOneField(Pledge, on_delete=models.CASCADE)
+    client_id = models.OneToOneField(Client, on_delete=models.CASCADE)
     amount=models.DecimalField(max_digits=20, decimal_places=2)
     type=models.CharField(max_length=20)
     sms=models.IntegerField()
@@ -68,7 +68,7 @@ class Match(models.Model):
 class Sms(models.Model):
 
     id=models.AutoField(primary_key=True)
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client_id = models.OneToOneField(Client, on_delete=models.CASCADE)
     status =models.CharField(max_length=20)
     message=models.CharField(max_length=200)
     sender=models.CharField(max_length=90)
@@ -79,4 +79,13 @@ class Sms(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+
+class Coins(models.Model):
+    id = models.AutoField(primary_key=True)
+    client_id = models.OneToOneField(Client, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    balance=models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 

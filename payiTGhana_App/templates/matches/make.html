@@ -10,10 +10,17 @@
 
 {% endblock %}
 
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div   style="text-align: center"{% if message.tags %} class="uk-alert"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </ul>
 
+{% endif %}
 
 {% block content %}
-    <h6 class="heading_b uk-margin-bottom">Make Pledge</h6>
+    <h6 class="heading_b uk-margin-bottom">Match Clients</h6>
 
 
     <div class="uk-width-xLarge-1-1">
@@ -23,7 +30,7 @@
             <div class="md-card-content">
 
 
-                <form method="POST" accept-charset="utf-8">
+                <form method="POST" accept-charset="utf-8" name="applicationForm">
 
                     {% csrf_token %}
 
@@ -33,13 +40,13 @@
                         <div class="parsley-row">
                             <div class="uk-input-group">
 
-                                <div class="md-input-wrapper md-input-filled"><label for="wizard_skype">Amount to pledge
+                                <div class="md-input-wrapper md-input-filled"><label for="wizard_skype">Select Pledge
                                     :</label>
                                     <p></p>
-                                    <select class="md-input" name="amount" id="amount" required="">
-                                        <option value="">select amount</option>
-
-                                        <option value="100">100</option>
+                                    <select id="pledge" required="" name="pledge">
+                                        {% for pledge in pledges %}
+                                            <option value="{{pledge.id }}">{{pledge.pledge_maker_id.firstname }} {{pledge.pledge_maker_id.lastname}} - {{pledge.pledged_amount}} pledged on  - {{pledge.created_at|date:"M d, Y"}}</option>
+                                        {% endfor %}
                                     </select>
 
                                     <span class="md-input-bar"></span>
@@ -48,10 +55,37 @@
 
                             </div>
                         </div>
+                     <div class="parsley-row">
+                            <div class="uk-input-group">
+
+                                <div class="md-input-wrapper md-input-filled"><label for="wizard_skype">Select Client
+                                    :</label>
+                                    <p></p>
+                                    <select name="client" id="client" required="">
+                                        {% for client in clients %}
+                                            <option value="{{client.id }}">{{client.firstname }} {{client.lastname}}  created on  - {{client.created_at|date:"M d, Y"}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <span class="md-input-bar"></span>
+
+                                </div>
+
+                            </div>
+                        </div>
+                     <div class="parsley-row">
+                            <div class="uk-input-group">
+                                <label>Amount</label>
+                                <input type="text" class="md-input md-input" name="amount"   required="" v-model='amount' v-form-ctrl='' />
+                                 <p class="uk-text-danger uk-text-small"  v-if="applicationForm.amount.$error.required" >Amount is required</p>
+
+                            </div>
+                     </div>
+
                         <div class="parsley-row">
                             <div class="uk-input-group" STYLE="margin-top: 11px">
                                 <button class="md-btn  md-btn-small md-btn-success uk-margin-small-top" type="submit">
-                                    Submit Pledge
+                                    Match
                                 </button>
 
 

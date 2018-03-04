@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% load account_tags %}
+{% block style %}
+
+
+
+
+{% endblock %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div   style="text-align: center"{% if message.tags %}  {% endif %}>{{ message }}</div>
+        {% endfor %}
+    </ul>
+
+{% endif %}
+
+
+{% block content %}
+    <h6 class="heading_b uk-margin-bottom">Matches</h6>
+
+
+    <div><a  class="md-btn  md-btn-success md-btn-small" onclick="return confirm('This will send sms to all clients who have been matched. Will you like to proceed?')" href="{% url 'bulknotifications' %}">Send Bulk Match Message</a> </div>
+    &nbsp;
+    <div class="uk-width-xLarge-1-1">
+        <div class="md-card">
+            <div class="md-card-content">
+                <div class="uk-overflow-container" id='print'>
+                    <center><span class="uk-text-success uk-text-bold">{{ data.object_list | length }} records</span></center>
+
+                             <table class="uk-table uk-table-hover  uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair">
+
+                                <thead>
+
+                                <th>No</th>
+                                <th>Pledger</th>
+                                <th>Receiver Name</th>
+
+                                <th>Amount matched</th>
+                                <th>Match Type</th>
+
+                                <th>Date Matched</th>
+                                <th>SMS</th>
+                                 <th>Status</th>
+                                <th>Actions</th>
+
+                                </thead>
+                                <tbody>
+                        {% for record in data %}
+
+                            <tr>
+                                <td> {{ forloop.counter }} {# starting index 1 #}</td>
+                                <td>{{ record.pledge_id.pledge_maker_id.firstname }} {{ record.pledge_id.pledge_maker_id.lastname }}</td>
+
+                                <td>{{ record.client_id.firstname}} {{record.client_id.lastname}}</td>
+
+                                <td>{{ record.amount }}</td>
+                                <td>{{ record.type }}</td>
+
+                                <td>{{ record.created_at }}</td>
+
+                                <td>
+                                   {% if record.sms == 1  %}
+                                       <span class="uk-text-success">SMS sent</span>
+                                   {% else %}
+                                         <span class="uk-text-warning">SMS pending</span>
+                                  {% endif %}
+                                </td>
+
+                                <td>
+                                   {% if record.confirmed == 0  %}
+                                       <span class="uk-text-success">Payment Confirmed</span>
+                                   {% else %}
+                                         <span class="uk-text-warning">Payment Unconfirmed</span>
+                                  {% endif %}
+                                </td>
+                                {% if user.is_superuser %}
+                                    <td><a  onclick="return confirm('Are you sure you want to delete this match ?')"class="md-btn  md-btn-danger md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'delete-match'  record.id %}"><i  class="sidebar-menu-icon material-icons md-18">delete</i></a></td>
+
+                                {% endif %}
+                                 {% if record.confirmed == 0  %}
+                                        <td> <a  onclick="return confirm('Are you sure you want to confirm this match ?')"class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a></td>
+
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+                {% if users.has_other_pages %}
+                    <ul class="uk-pagination">
+                        {% if data.has_previous %}
+                            <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in data.paginator.page_range %}
+                            {% if data.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if data.has_next %}
+                            <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="md-fab-wrapper">
+                <a class="md-fab md-fab-small md-fab-accent md-fab-wave" href="{% url 'pledge' %}">
+                    <i class="material-icons md-18">&#xE145;</i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block js %}
+<script>
+        $(document).ready(function() {
+            $('table').DataTable();
+        } );
+    </script>
+
+{% endblock %}

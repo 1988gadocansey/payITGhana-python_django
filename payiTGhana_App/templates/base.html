@@ -225,7 +225,7 @@
                             <ul class="uk-nav uk-nav-dropdown">
                                 <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
                                 {% if user.is_superuser %}
-                                      <li><a href='{% url 'pledge' %}'>Match Clients</a></li>
+                                      <li><a href='{% url 'match' %}'>Match Clients</a></li>
                                  {% endif %}
 
 
@@ -239,9 +239,9 @@
                         <ul class="uk-nav uk-nav-dropdown">
                         <li>
                              <li><a href='{% url 'pledges' %}'>My Pledges</a></li>
-                             <li><a href='{% url 'pledges' %}'>My Matches</a></li>
+                             <li><a href='{% url 'matches' %}'>My Matches</a></li>
                              {% if user.is_superuser %}
-                                      <li><a href='{% url 'pledge' %}'>View Matches</a></li>
+                                      <li><a href='{% url 'matches' %}'>View Matches</a></li>
                                  {% endif %}
 
 
@@ -259,8 +259,10 @@
                                  <li><a href='{% url 'dashboard' %}'>Homepage</a></li>
                                  <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
                                 <li><a href='{% url  'pledges' %}'>My Pledges</a></li>
+                                <li><a href='{% url 'matches' %}'>My Matches</a></li>
                                  {% if user.is_superuser %}
-                                     <li><a href='{% url 'pledge' %}'>Match Clients</a></li>
+                                     <li><a href='{% url 'match' %}'>Match Clients</a></li>
+                                     <li><a href='{% url 'matches' %}'>View Matches</a></li>
                                  {% endif %}
 
                                  <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -280,6 +282,7 @@
 
 <div id="page_content">
     <div id="page_content_inner">
+            {% include 'partials/messages.html' %}
 
      {% block content %}{% endblock %}
 
@@ -574,7 +577,7 @@
         });
 
     });
-     $(".success").fadeOut(4000);
+     $(".uk-alert-success").fadeOut(4000);
         $(".uk-alert-danger").fadeOut(4000);
 
     function printDiv(divID) {
@@ -609,6 +612,7 @@
         document.getElementById("amount").value = (copies * price);
     }
 </script>
+
 <script>
 
 

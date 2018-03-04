@@ -19,14 +19,7 @@
 
 
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <div   style="text-align: center"{% if message.tags %} class="uk-alert"{% endif %}>{{ message }}</div>
-        {% endfor %}
-    </ul>
 
-{% endif %}
 
 
 
@@ -44,8 +37,8 @@
                     <div class="md-card">
                         <div class="md-card-content">
                             <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=" "><i class="sidebar-menu-icon material-icons md-36">account_balance</i></span></div>
-                            <span class="uk-text-muted uk-text-small">Total Pledges - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
-                            <span class="uk-text-muted uk-text-small">Total Pledges - <span class="uk-text-bold uk-text-danger ">GH44 </span></span><br/>
+                            <span class="uk-text-muted uk-text-small">Total Pledges </span></span><br/>
+                            <span class="uk-text-muted uk-text-small">  <span class="uk-text-bold uk-text-danger ">{{ pledges.id__count }} </span></span><br/>
                            </div>
                     </div>
                 </div>
@@ -56,7 +49,7 @@
                         <div class="md-card-content">
                          <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
                             <span class="uk-text-muted uk-text-small">Coins in wallet</span>
-                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success ">GHS0.0</span></h5>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success ">{{ coins.amount__sum }}</span></h5>
                         </div>
                     </div>
                 </div>
@@ -66,7 +59,7 @@
                         <div class="md-card-content">
                          <div class="uk-float-right uk-margin-top uk-margin-small-right"><span class=""><i class="sidebar-menu-icon material-icons md-36">event_note</i></span></div>
                             <span class="uk-text-muted uk-text-small">Total Matches</span>
-                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> Matches = 0 </span></h5>
+                            <h5 class="uk-margin-remove"><span class="uk-text-small uk-text-success "> {{ matches.id__count }} </span></h5>
                         </div>
                     </div>
                 </div>
@@ -182,8 +175,25 @@
                 <div class="uk-width-medium-1-2">
                     <div class="md-card">
                         <div class="md-card-content">
-                            <h3 class="heading_a uk-margin-bottom">Recent Transactions with PayitGH</h3>
-                            <div id="ct-chart" class="chartist"></div>
+                            <h3 class="heading_a uk-margin-bottom">Coins prices at PayitGH</h3>
+                            <div id="ct-chart" class="chartist">
+
+                                <table class="uk-table">
+                                    <thead>
+                                    <th>No.</th>
+                                    <th>Coins</th>
+                                    <th>Amount</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>100</td>
+                                            <td>GHS10.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                 </div>

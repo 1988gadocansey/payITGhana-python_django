@@ -16,7 +16,11 @@ urlpatterns = [
    url(r'^client/pledge/$',  views.pledge, name='pledge'),
    url(r'^task/match/$',  views.match, name='match'),
    url(r'^client/pledges/$',  views.pledges, name='pledges'),
-   url(r'^(?P<object_id>[0-9]+)/delete_pledge/$',views.delete_pledge, name='delete-pledge')
+   url(r'^task/matches/$',  views.matches, name='matches'),
+   url(r'^task/bulk/matches/sms$',  views.sendMatchNotification, name='bulknotifications'),
+   url(r'^(?P<object_id>[0-9]+)/confirm_match/$',  views.matche_confirmed, name='confirmed_matches'),
+   url(r'^(?P<object_id>[0-9]+)/delete_pledge/$',views.delete_pledge, name='delete-pledge'),
+   url(r'^(?P<object_id>[0-9]+)/delete_match/$',views.delete_match, name='delete-match')
 
 
 ]
