@@ -7,7 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 class Client(models.Model):
 
      id = models.AutoField(primary_key=True)
-    # code = models.CharField(max_length=100)
+     code = models.CharField(max_length=100)
      firstname= models.CharField(max_length=100)
      lastname= models.CharField(max_length=100)
      gender= models.CharField(max_length=10)
@@ -41,8 +41,8 @@ class Pledge(models.Model):
     transaction_code=models.CharField(unique=True,max_length=10)
     status=models.IntegerField()
     matched=models.IntegerField()
-    repledged=models.IntegerField()
-    pledge_receiver_id=models.IntegerField(null=True)
+    repledged=models.IntegerField(null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

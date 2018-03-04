@@ -142,6 +142,7 @@ def clientProfile(request):
             client.mobile_money_phone=request.POST.get('mobile_money_phone')
             client.user_id = current_user
             client.email = request.POST.get('email')
+            client.code=0
             client.address = request.POST.get('address')
             client.referrer = request.POST.get('referrer')
             client.date_joined=timezone.now()
@@ -387,7 +388,7 @@ def sendMatchNotification(request):
       #  d_date = datetime.datetime.strptime(q.pledge_id.payment_deadline, '%Y-%m-%d %H:%M:%S.%f')
         mature=format(q.pledge_id.payment_deadline.strftime('%A, %d %B %Y at %H:%M'))
         message = "Hi " + name + " You have been matched to fulfil your pledge of GHS" + str(
-            q.amount) + " to " + q.client_id.firstname + " on payitgh.com.Deadline for payment is " + str(mature) + "check your dashboard for details"
+            q.amount) + " to " + q.client_id.firstname + " on payitgh.com.Deadline for payment is " + str(mature) + " check your dashboard for details"
         send_sms(phone, message, current_user.id)
 
         Match.objects.update(sms=1)
