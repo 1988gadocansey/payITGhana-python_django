@@ -147,7 +147,7 @@ def clientProfile(request):
             client.date_joined=timezone.now()
 
             client.save()
-            messages.success(request, 'Form submission successful')
+            messages.success(request, 'Profile update successful')
 
             return HttpResponseRedirect('/app/dashboard/')
 
@@ -183,31 +183,38 @@ def pledge(request):
         current_user = request.user
         client = Client.objects.get(user_id=current_user.id)
 
-        coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount'))
+        coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount')).get('amount__sum', 0.00)
 
-        if coins.amount__sum  >= 100.00:
-            pledge = Pledge()
-            pledge.pledged_amount = request.POST.get('amount')
-            pledge.pledge_maker_id= client
-            pledge.payment_confirm="Unconfirmed"
-            pledge.transaction_code=str(uuid.uuid4())[:8]
-            pledge.status=0
-            pledge.payment_deadline=timezone.now()
-            pledge.repledged=0
-            pledge.matched=0
-            pledge.payment_deadline=maturity
-            pledge.maturity_date=maturity
-            pledge.save()
+        try:
+            if coins  >= 100.00:
+                pledge = Pledge()
+                pledge.pledged_amount = request.POST.get('amount')
+                pledge.pledge_maker_id= client
+                pledge.payment_confirm="Unconfirmed"
+                pledge.transaction_code=str(uuid.uuid4())[:8]
+                pledge.status=0
+                pledge.payment_deadline=timezone.now()
+                pledge.repledged=0
+                pledge.matched=0
+                pledge.payment_deadline=maturity
+                pledge.maturity_date=maturity
+                pledge.save()
 
-            Coins.objects.filter(client_id=client).update(balance=F('amount')-100)
+                Coins.objects.filter(client_id=client).update(amount=F('amount')-100)
 
-            messages.success(request, 'Pledge created successfully')
-        else:
+                messages.success(request, 'Pledge created successfully')
+            else:
 
-            messages.success(request, "Please top up your coins in order to pledge. Your coins balance is too low. Balance is " + coins)
+                messages.warning(request, "Please top up your coins in order to pledge. Your coins balance is too low. Balance is " + str(coins))
 
 
-        return redirect('pledges')
+            return redirect('pledges')
+        except:
+
+            messages.warning(request,
+                             "Please purchase coins in order to pledge ")
+
+            return redirect('pledges')
 
 
     else:
@@ -218,11 +225,12 @@ def pledge(request):
 def pledges(request):
     page = request.GET.get('page', 1)
     current_user = request.user
-    client = Client.objects.get(user_id=current_user.id)
-    data=Pledge.objects.filter(Q(pledge_maker_id=client) | Q(pledge_maker_id=client)).order_by('-id').all()
-    paginator = Paginator(data, 50)
-
     try:
+        client = Client.objects.get(user_id=current_user.id)
+        data=Pledge.objects.filter(Q(pledge_maker_id=client) | Q(pledge_maker_id=client)).order_by('-id').all()
+        paginator = Paginator(data, 50)
+
+
         records = paginator.page(page)
     except PageNotAnInteger:
         records = paginator.page(1)
@@ -241,8 +249,16 @@ def pledges(request):
 #     return redirect('pledges')
 
 def delete_pledge(request, object_id):
+
     object = get_object_or_404(Pledge, pk=object_id)
     object.delete()
+
+    current_user = request.user
+    client = Client.objects.get(user_id=current_user.id)
+
+
+    Coins.objects.filter(client_id=client).update(amount=F('amount') + 100)
+
     messages.success(request, 'Pledge deleted successfully')
 
     return redirect('pledges')
@@ -368,7 +384,8 @@ def sendMatchNotification(request):
     for q in data:
         name = q.client_id.mobile_money_name;
         phone = q.client_id.mobile_money_phone;
-        mature= q.pledge_id.payment_deadline.date.strftime("%Y-%m-%d %H:%M:%S")
+      #  d_date = datetime.datetime.strptime(q.pledge_id.payment_deadline, '%Y-%m-%d %H:%M:%S.%f')
+        mature=format(q.pledge_id.payment_deadline.strftime('%A, %d %B %Y at %H:%M'))
         message = "Hi " + name + " You have been matched to fulfil your pledge of GHS" + str(
             q.amount) + " to " + q.client_id.firstname + " on payitgh.com.Deadline for payment is " + str(mature) + "check your dashboard for details"
         send_sms(phone, message, current_user.id)

@@ -23,8 +23,9 @@
 {% block content %}
     <h6 class="heading_b uk-margin-bottom">Matches</h6>
 
-
+  {% if user.is_superuser %}
     <div><a  class="md-btn  md-btn-success md-btn-small" onclick="return confirm('This will send sms to all clients who have been matched. Will you like to proceed?')" href="{% url 'bulknotifications' %}">Send Bulk Match Message</a> </div>
+   {% endif %}
     &nbsp;
     <div class="uk-width-xLarge-1-1">
         <div class="md-card">
@@ -78,11 +79,11 @@
                                          <span class="uk-text-warning">Payment Unconfirmed</span>
                                   {% endif %}
                                 </td>
-                                {% if user.is_superuser %}
+                                {% if user.is_superuser  %}
                                     <td><a  onclick="return confirm('Are you sure you want to delete this match ?')"class="md-btn  md-btn-danger md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'delete-match'  record.id %}"><i  class="sidebar-menu-icon material-icons md-18">delete</i></a></td>
 
-                                {% endif %}
-                                 {% if record.confirmed == 0  %}
+                                {% else %}
+
                                         <td> <a  onclick="return confirm('Are you sure you want to confirm this match ?')"class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a></td>
 
                                 {% endif %}

@@ -84,7 +84,7 @@ class Coins(models.Model):
     id = models.AutoField(primary_key=True)
     client_id = models.OneToOneField(Client, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
-    balance=models.IntegerField()
+   # balance=models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

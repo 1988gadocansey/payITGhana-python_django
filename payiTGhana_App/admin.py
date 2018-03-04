@@ -26,4 +26,4 @@ class SmsAdmin(admin.ModelAdmin):
 
 @admin.register(Coins)
 class CoinsAdmin(admin.ModelAdmin):
-    list_display = ['id','client_id','amount','balance','created_at','updated_at']
+    list_display = ['id','client_id','amount', 'created_at','updated_at']

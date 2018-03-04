@@ -217,7 +217,7 @@
                 <li class="uk-hidden-small"><a href='{% url 'dashboard' %}'><i title='home' class="material-icons">&#xE88A;</i><span>Home</span></a>
                 </li>
 
-                 {% if user.is_superuser %}
+
                     <li data-uk-dropdown class="uk-hidden-small">
                         <a href="#"><i
                                 class="sidebar-menu-icon material-icons md-18">account_balance</i><span>Task</span></a>
@@ -232,16 +232,19 @@
                             </ul>
                         </div>
                     </li>
-                 {% endif %}
+
                 <li data-uk-dropdown class="uk-hidden-small">
                     <a href="#"> <i class="sidebar-menu-icon material-icons">assignment</i><span>Transactions</span></a>
                     <div class="uk-dropdown uk-dropdown-scrollable">
                         <ul class="uk-nav uk-nav-dropdown">
                         <li>
                              <li><a href='{% url 'pledges' %}'>My Pledges</a></li>
-                             <li><a href='{% url 'matches' %}'>My Matches</a></li>
+
                              {% if user.is_superuser %}
+
                                       <li><a href='{% url 'matches' %}'>View Matches</a></li>
+                                    {% else %}
+                                     <li><a href='{% url 'matches' %}'>My Matches</a></li>
                                  {% endif %}
 
 
