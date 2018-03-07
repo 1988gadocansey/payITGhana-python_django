@@ -68,7 +68,7 @@ class Match(models.Model):
 class Sms(models.Model):
 
     id=models.AutoField(primary_key=True)
-    client_id = models.OneToOneField(Client, on_delete=models.CASCADE)
+   # client_id = models.ManyToOneRel(Client, on_delete=models.CASCADE)
     status =models.CharField(max_length=20)
     message=models.CharField(max_length=200)
     sender=models.CharField(max_length=90)

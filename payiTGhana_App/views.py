@@ -39,7 +39,7 @@ def send_sms(phone, message,sender):
     phone="0"+str(phone)
     client = Client.objects.get(user_id=sender)
     sender_id="PayiTGh"
-    api_key="4ef55e5f24720b20f1e4"
+    api_key="bcb86ecbc1a058663a07"
     # parameters to send SMS
     params = {"key": api_key, "to": phone, "msg": message, "sender_id": sender_id}
 
@@ -81,7 +81,7 @@ def send_sms(phone, message,sender):
     sms.sender = sender
     sms.status = status
     sms.phone = phone
-    sms.client_id = client
+    #sms.client_id = client
     sms.message = message
     sms.save()
 
@@ -179,7 +179,7 @@ def pledge(request):
     if request.method == "POST":
 
 
-        maturity= datetime.now() + timedelta(days=10)
+        maturity= datetime.now() + timedelta(days=1)
 
         current_user = request.user
         client = Client.objects.get(user_id=current_user.id)
@@ -226,11 +226,18 @@ def pledge(request):
 def pledges(request):
     page = request.GET.get('page', 1)
     current_user = request.user
-    try:
-        client = Client.objects.get(user_id=current_user.id)
-        data=Pledge.objects.filter(Q(pledge_maker_id=client) | Q(pledge_maker_id=client)).order_by('-id').all()
-        paginator = Paginator(data, 50)
 
+    try:
+        if request.user.is_superuser:
+            client = Client.objects.get(user_id=current_user.id)
+            data = Pledge.objects.order_by('-id').all()
+            paginator = Paginator(data, 50)
+
+
+        else:
+            client = Client.objects.get(user_id=current_user.id)
+            data=Pledge.objects.filter(pledge_maker_id=client).filter(payment_confirm='Unconfirmed').filter(match=0).order_by('-id').all()
+            paginator = Paginator(data, 50)
 
         records = paginator.page(page)
     except PageNotAnInteger:
@@ -294,6 +301,9 @@ def match(request):
             match.type="receive"
             match.sms=0
             match.save()
+
+            Pledge.objects.filter(pledge_maker_id=current_user.id).filter(id=pledge_details.id).update(match=1)
+
             #print(pledge_details)
 
             messages.success(request, 'Match created')
