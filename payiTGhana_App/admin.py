@@ -22,7 +22,7 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(Sms)
 class SmsAdmin(admin.ModelAdmin):
-    list_display = ['id','client_id','message','type','status','phone','sender','created_at','updated_at']
+    list_display = ['id','message','type','status','phone','sender','created_at','updated_at']
 
 @admin.register(Coins)
 class CoinsAdmin(admin.ModelAdmin):

@@ -13,7 +13,7 @@
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
-            <div   style="text-align: center"{% if message.tags %}  {% endif %}>{{ message }}</div>
+            <div style="text-align: center"{% if message.tags %}  {% endif %}>{{ message }}</div>
         {% endfor %}
     </ul>
 
@@ -23,118 +23,205 @@
 {% block content %}
     <h6 class="heading_b uk-margin-bottom">Matches</h6>
 
-  {% if user.is_superuser %}
-    <div><a  class="md-btn  md-btn-success md-btn-small" onclick="return confirm('This will send sms to all clients who have been matched. Will you like to proceed?')" href="{% url 'bulknotifications' %}">Send Bulk Match Message</a> </div>
-   {% endif %}
+    {% if user.is_superuser %}
+        <div><a class="md-btn  md-btn-success md-btn-small"
+                onclick="return confirm('This will send sms to all clients who have been matched. Will you like to proceed?')"
+                href="{% url 'bulknotifications' %}">Send Bulk Match Message</a></div>
+    {% endif %}
     &nbsp;
-    <div class="uk-width-xLarge-1-1">
-        <div class="md-card">
-            <div class="md-card-content">
-                <div class="uk-overflow-container" id='print'>
-                    <center><span class="uk-text-success uk-text-bold">{{ data.object_list | length }} records</span></center>
+    {% if user.is_superuser %}
+        <div class="uk-width-xLarge-1-1">
+            <div class="md-card">
+                <div class="md-card-content">
+                    <div class="uk-overflow-container" id='print'>
+                        <center><span
+                                class="uk-text-success uk-text-bold">{{ data.object_list | length }} records</span>
+                        </center>
 
-                             <table class="uk-table uk-table-hover  uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair">
+                        {% if data.all %}
+                            <table class="uk-table uk-table-hover  uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair">
 
                                 <thead>
 
                                 <th>No</th>
-                                <th>Pledger</th>
-                                <th>Receiver Name</th>
+
+                                <th>Pay to</th>
+                                <th>Mobile Money No</th>
 
                                 <th>Amount matched</th>
-                                <th>Match Type</th>
+
 
                                 <th>Date Matched</th>
                                 <th>SMS</th>
-                                 <th>Status</th>
+                                <th>Status</th>
                                 <th>Actions</th>
 
                                 </thead>
                                 <tbody>
-                        {% for record in data %}
+                                {% for record in data %}
 
-                            <tr>
-                                <td> {{ forloop.counter }} {# starting index 1 #}</td>
-                                <td>{{ record.pledge_id.pledge_maker_id.firstname }} {{ record.pledge_id.pledge_maker_id.lastname }}</td>
+                                    <tr>
+                                        <td> {{ forloop.counter }} {# starting index 1 #}</td>
+                                        <td>{{ record.pledge_id.pledge_maker_id.firstname }} {{ record.pledge_id.pledge_maker_id.lastname }}</td>
 
-                                <td>{{ record.client_id.firstname}} {{record.client_id.lastname}}</td>
+                                        <td>0{{ record.client_id.mobile_money_phone }}</td>
 
-                                <td>{{ record.amount }}</td>
-                                <td>{{ record.type }}</td>
-
-                                <td>{{ record.created_at }}</td>
-
-                                <td>
-                                   {% if record.sms == 1  %}
-                                       <span class="uk-text-success">SMS sent</span>
-                                   {% else %}
-                                         <span class="uk-text-warning">SMS pending</span>
-                                  {% endif %}
-                                </td>
-
-                                <td>
-                                   {% if record.confirmed == 'confirmed'  %}
-                                       <span class="uk-text-success">Payment Confirmed</span>
-                                   {% else %}
-                                         <span class="uk-text-warning">Payment Unconfirmed</span>
-                                  {% endif %}
-                                </td>
-                                {% if user.is_superuser  %}
-                                    <td><a  onclick="return confirm('Are you sure you want to delete this match ?')"class="md-btn  md-btn-danger md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'delete-match'  record.id %}"><i  class="sidebar-menu-icon material-icons md-18">delete</i></a></td>
-
-                                {% else %}
-
-                                        <td> <a  onclick="return confirm('Are you sure you want to confirm this match ?')"class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light" href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a></td>
-
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
+                                        <td>{{ record.amount }}</td>
 
 
-                        </tbody>
+                                        <td>{{ record.created_at }}</td>
 
-                    </table>
+                                        <td>
+                                            {% if record.sms == 1 %}
+                                                <span class="uk-text-success">SMS sent</span>
+                                            {% else %}
+                                                <span class="uk-text-warning">SMS pending</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if record.confirmed == 'confirmed' %}
+                                                <span class="uk-text-success">Payment Confirmed</span>
+                                            {% else %}
+                                                <span class="uk-text-warning">Payment Unconfirmed</span>
+                                            {% endif %}
+                                        </td>
+                                        {% if user.is_superuser %}
+                                            <td>
+                                                <a onclick="return confirm('Are you sure you want to delete this match ?')"
+                                                   class="md-btn  md-btn-danger md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
+                                                   href="{% url 'delete-match'  record.id %}"><i
+                                                        class="sidebar-menu-icon material-icons md-18">delete</i></a>
+                                            </td>
+
+                                        {% endif %}
+                                        {% if record.confirmed == '0' and record.client_id.user_id.id == request.user.id %}
+
+                                            <td>
+                                                <a onclick="return confirm('Are you sure you want to confirm this match ?')"
+                                                   class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
+                                                   href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a>
+                                            </td>
+
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+
+                            </table>
+
+                            </div>
+
+
+                        {% else %}
+                            <p class="uk-text-warning">No Matches to display</p>
+                        {% endif %}
+
 
                 </div>
-                {% if users.has_other_pages %}
-                    <ul class="uk-pagination">
-                        {% if data.has_previous %}
-                            <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
-                        {% else %}
-                            <li class="disabled"><span>&laquo;</span></li>
-                        {% endif %}
-                        {% for i in data.paginator.page_range %}
-                            {% if data.number == i %}
-                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                            {% else %}
-                                <li><a href="?page={{ i }}">{{ i }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if data.has_next %}
-                            <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
-                        {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                        {% endif %}
-                    </ul>
-                {% endif %}
-            </div>
-            <div class="md-fab-wrapper">
-                <a class="md-fab md-fab-small md-fab-accent md-fab-wave" href="{% url 'pledge' %}">
-                    <i class="material-icons md-18">&#xE145;</i>
-                </a>
+                <div class="md-fab-wrapper">
+                    <a class="md-fab md-fab-small md-fab-accent md-fab-wave" href="{% url 'pledge' %}">
+                        <i class="material-icons md-18">&#xE145;</i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+
+
+    {% else %}
+        {% if data.all %}
+            {% for record in data %}
+
+                {% if record.type == "receive" and record.confirmed == "0" and  record.client_id.user_id.id == request.user.id %}
+
+
+                    <p class="uk-text-success">Receive payment from </p>
+                    <div class="uk-alert" role="uk-alert">
+
+                        <p>Phone No:  0{{ record.pledge_id.pledge_maker_id.phone }}</p>
+                        <p>
+                            Mobile Money
+                            name:
+                            {{ record.pledge_id.pledge_maker_id.mobile_money_name |capfirst }}
+
+
+                        </p>
+                        <p>Mobile Money
+                            Number: 0{{ record.pledge_id.pledge_maker_id.mobile_money_phone }}</p>
+
+                        <p>Amount to recieve: GHS {{ record.amount }}</p>
+
+                        <p>
+
+                            {% if record.confirmed == '0' and record.client_id.user_id.id == request.user.id %}
+
+                                <a onclick="return confirm('Are you sure you want to confirm this match ?')"
+                                   class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
+                                   href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a>
+
+                            {% endif %}
+                        </p>
+                    </div>
+                    <hr>
 
 
 
+                {% endif %}
+
+
+
+
+            {% endfor %}
+        {% else %}
+             <div class="uk-alert uk-alert-info" role="uk-alert">
+
+            <p class="uk-text-warning">No payments to receive</p>
+             </div>
+
+        {% endif %}
+
+
+         {% if payee.all %}
+            {% for row in payee %}
+
+                 <p class="uk-text-success">You are to pay this participants </p>
+                    <div class="uk-alert" role="uk-alert">
+                          <p>Phone No:  0{{ row.pledge_maker_id.phone }}</p>
+
+                       <p>Mobile Money name:  {{ row.pledge_maker_id.mobile_money_name |capfirst }}</p>
+
+                        <p>Mobile Money Number: 0{{ row.pledge_maker_id.mobile_money_phone }}</p>
+                        <p>Amount to pay: GHS{{ row.pledged_amount }}</p>
+
+                    </div>
+                    <hr>
+
+
+
+            {% endfor %}
+
+         {% else %}
+            <div class="uk-alert uk-alert-info" role="uk-alert">
+                <p class="uk-text-info">No participants to pay </p></div>
+
+          {% endif %}
+
+
+
+
+
+    {% endif %}
 
 {% endblock %}
 {% block js %}
-<script>
-        $(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             $('table').DataTable();
-        } );
+        });
+         $(".uk-alert-success").fadeOut(10000);
+        $(".uk-alert-danger").fadeOut(10000);
     </script>
 
 {% endblock %}

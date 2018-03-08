@@ -7,7 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 class Client(models.Model):
 
      id = models.AutoField(primary_key=True)
-     code = models.CharField(max_length=100)
+     #code = models.CharField(max_length=100)
      firstname= models.CharField(max_length=100)
      lastname= models.CharField(max_length=100)
      gender= models.CharField(max_length=10)
