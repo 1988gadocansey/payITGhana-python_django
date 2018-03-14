@@ -40,7 +40,7 @@
                         <th>Date of pledge</th>
                         <th>Amount Pledged</th>
                         <th>Payment Maturity</th>
-                        <th>Expected Earnings</th>
+
 
 
                         <th>Status</th>
@@ -59,7 +59,6 @@
                                 <td>{{ record.created_at|timesince }} ago</td>
                                 <td>{{ record.pledged_amount }}</td>
                                 <td>{{ record.maturity_date }}</td>
-                                <td>{{ record.pledged_amount }}</td>
 
                                 <td>
                                    {% if record.payment_confirm == 0 and record.pledge_receiver_id == request.user.id %}

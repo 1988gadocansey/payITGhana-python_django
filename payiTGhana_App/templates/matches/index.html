@@ -45,8 +45,13 @@
 
                                 <th>No</th>
 
-                                <th>Pay to</th>
-                                <th>Mobile Money No</th>
+                                <th>Payer Name</th>
+                                <th>Payer Number </th>
+
+                                <th>Receiver Name</th>
+                                <th>Receiver Number </th>
+
+
 
                                 <th>Amount matched</th>
 
@@ -63,8 +68,11 @@
                                     <tr>
                                         <td> {{ forloop.counter }} {# starting index 1 #}</td>
                                         <td>{{ record.pledge_id.pledge_maker_id.firstname }} {{ record.pledge_id.pledge_maker_id.lastname }}</td>
+                                        <td>0{{ record.pledge_id.pledge_maker_id.phone }}</td>
 
-                                        <td>0{{ record.client_id.mobile_money_phone }}</td>
+                                         <td>{{ record.client_id.firstname }} {{ record.client_id.lastname }}</td>
+
+                                        <td>0{{ record.client_id.phone }}</td>
 
                                         <td>{{ record.amount }}</td>
 
@@ -134,41 +142,28 @@
         {% if data.all %}
             {% for record in data %}
 
-                {% if record.type == "receive" and record.confirmed == "0" and  record.client_id.user_id.id == request.user.id %}
 
-
-                    <p class="uk-text-success">Receive payment from </p>
+                    <p class="uk-text-success">You are to pay this clients   </p>
                     <div class="uk-alert" role="uk-alert">
+                         <p>Account Holder: {{ record.client_id.phone }}</p>
 
-                        <p>Phone No:  0{{ record.pledge_id.pledge_maker_id.phone }}</p>
-                        <p>
-                            Mobile Money
-                            name:
-                            {{ record.pledge_id.pledge_maker_id.mobile_money_name |capfirst }}
+                        <p>Phone number:  0{{ record.client_id.phone }}</p>
+                        <p>Mobile Money Name:
+                            {{ record.client_id.mobile_money_name |capfirst }}
 
 
                         </p>
-                        <p>Mobile Money
-                            Number: 0{{ record.pledge_id.pledge_maker_id.mobile_money_phone }}</p>
+                        <p>Mobile Money Number : 0{{ record.client_id.mobile_money_phone }}</p>
 
                         <p>Amount to recieve: GHS {{ record.amount }}</p>
 
-                        <p>
 
-                            {% if record.confirmed == '0' and record.client_id.user_id.id == request.user.id %}
-
-                                <a onclick="return confirm('Are you sure you want to confirm this match ?')"
-                                   class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
-                                   href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a>
-
-                            {% endif %}
-                        </p>
                     </div>
                     <hr>
 
 
 
-                {% endif %}
+
 
 
 
@@ -177,7 +172,7 @@
         {% else %}
              <div class="uk-alert uk-alert-info" role="uk-alert">
 
-            <p class="uk-text-warning">No payments to receive</p>
+            <p class="uk-text-warning">No client to payment</p>
              </div>
 
         {% endif %}
@@ -186,14 +181,35 @@
          {% if payee.all %}
             {% for row in payee %}
 
-                 <p class="uk-text-success">You are to pay this participants </p>
+                 <p class="uk-text-success">You are to receive  payment from  </p>
                     <div class="uk-alert" role="uk-alert">
+                    <p>Account Holder:
+
+                       {{ row.pledge_id.pledge_maker_id.firstname }} {{ row.pledge_id.pledge_maker_id.lastname }}
+
+
+
+                    </p>
+
                           <p>Phone No:  0{{ row.pledge_maker_id.phone }}</p>
 
                        <p>Mobile Money name:  {{ row.pledge_maker_id.mobile_money_name |capfirst }}</p>
 
                         <p>Mobile Money Number: 0{{ row.pledge_maker_id.mobile_money_phone }}</p>
                         <p>Amount to pay: GHS{{ row.pledged_amount }}</p>
+                         <p>
+
+                            {% if record.confirmed == '0' %}
+
+
+                                <a onclick="return confirm('Are you sure you want to confirm this match ?')"
+                                   class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
+                                   href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a>
+
+
+
+                            {% endif %}
+                        </p>
 
                     </div>
                     <hr>
@@ -204,7 +220,7 @@
 
          {% else %}
             <div class="uk-alert uk-alert-info" role="uk-alert">
-                <p class="uk-text-info">No participants to pay </p></div>
+                <p class="uk-text-info">No payments to receive </p></div>
 
           {% endif %}
 

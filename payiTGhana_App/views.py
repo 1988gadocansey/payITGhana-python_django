@@ -282,7 +282,7 @@ def match(request):
 
             match = Match()
             match.pledge_id = pledge_details
-            match.amount = amount
+            match.amount = amount*2
             match.confirmed = 0
             match.client_id = client
             match.type = "receive"
@@ -315,19 +315,17 @@ def match(request):
 @login_required
 def matches(request):
     page = request.GET.get('page', 1)
-    current_user = request.user
 
+    current_user = request.user
 
     if request.user.is_superuser:
         client = Client.objects.get(user_id=current_user.id)
 
         data = Match.objects.all()
 
-
-            # Select all values related to a record in your view
-        payee = Pledge.objects.filter(pledge_maker_id=client.id).filter(matched=1).filter(payment_confirm='Unconfirmed').all()
-
-
+        # Select all values related to a record in your view
+        payee = Pledge.objects.filter(matched=1).filter(
+            payment_confirm='Unconfirmed').all()
 
     else:
 
@@ -337,6 +335,8 @@ def matches(request):
 
         payee = Pledge.objects.filter(pledge_maker_id=client.id).filter(matched=1).filter(
             payment_confirm='Unconfirmed').all()
+
+
 
     return render(request, 'matches/index.html', {'data': data, 'payee': payee})
 
@@ -371,7 +371,7 @@ def matche_confirmed(request, object_id):
     message = "Hi " + name + " your payment of  GHS" + str(
         data.amount) + " to " + client.firstname + " has been confirmed successfully" \
                                                    "" \
-                                                   ".Your return is between 1-15days";
+                                                   ".Your return is between 1-5days";
 
     send_sms(phone, message, current_user.id)
 
@@ -389,13 +389,21 @@ def sendMatchNotification(request):
         phone = q.client_id.mobile_money_phone;
         #  d_date = datetime.datetime.strptime(q.pledge_id.payment_deadline, '%Y-%m-%d %H:%M:%S.%f')
         mature = format(q.pledge_id.payment_deadline.strftime('%A, %d %B %Y at %H:%M'))
-        message = "Hi " + name + " You have been matched to fulfil your pledge of GHS" + str(
+
+        pledges = Pledge.objects.filter(id=q.pledge_id.id).get()
+
+        receiver = "Hi" + name + "you have been matched to receive payment of GHS" + str(q.amount) + " from " + pledges.pledge_maker_id.firstname + ".  whose mobile money number is " + str(
+            pledges.pledge_maker_id.mobile_money_phone) + " Go to your dashboard for details"
+
+        payer = "Hi " + pledges.pledge_maker_id.firstname + " You have been matched to fulfil your pledge of GHS" + str(
             q.amount) + " to " + q.client_id.firstname + " whose mobile money number is " + str(
             q.client_id.mobile_money_phone) + " on payitgh.com.Deadline for payment is " + str(
             mature) + " check your dashboard for details"
-        send_sms(phone, message, current_user.id)
 
         Match.objects.update(sms=1)
+
+        send_sms(phone, receiver, current_user.id)
+        send_sms(pledges.pledge_maker_id.mobile_money_phone, payer, current_user.id)
 
     messages.success(request, 'sms notifications send successfully')
 
