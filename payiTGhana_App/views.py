@@ -88,11 +88,13 @@ def dashboard(request):
         current_user = request.user
 
         client = Client.objects.get(user_id=current_user.id)
-        pledges = Pledge.objects.filter(pledge_maker_id=client).aggregate(Count('id'))
-        matches = Match.objects.filter(client_id=client).aggregate(Count('id'))
-        coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount'))
-        context = {'client': client, 'pledges': pledges, 'matches': matches, 'coins': coins}
-
+        if(client):
+            pledges = Pledge.objects.filter(pledge_maker_id=client).aggregate(Count('id'))
+            matches = Match.objects.filter(client_id=client).aggregate(Count('id'))
+            coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount'))
+            context = {'client': client, 'pledges': pledges, 'matches': matches, 'coins': coins}
+        else:
+            return redirect('clientProfile')
     except Client.DoesNotExist:
         raise Http404("Client does not exist")
     return render(request, 'dashboard/index.html', context)
@@ -173,7 +175,7 @@ def clientProfile(request):
 def pledge(request):
     if request.method == "POST":
 
-        maturity = datetime.now() + timedelta(days=1)
+        maturity = datetime.now() + timedelta(days=5)
 
         current_user = request.user
         client = Client.objects.get(user_id=current_user.id)
@@ -282,14 +284,14 @@ def match(request):
 
             match = Match()
             match.pledge_id = pledge_details
-            match.amount = amount*2
+            match.amount =  amount
             match.confirmed = 0
             match.client_id = client
             match.type = "receive"
             match.sms = 0
             match.save()
 
-            Pledge.objects.filter(id=pledge_details.id).update(matched=1)
+            Pledge.objects.filter(id=pledge_details.id).update(matched=1,pledge_receiver=client)
 
             # print(pledge_details)
 
@@ -319,7 +321,7 @@ def matches(request):
     current_user = request.user
 
     if request.user.is_superuser:
-        client = Client.objects.get(user_id=current_user.id)
+        #client = Client.objects.get(user_id=current_user.id)
 
         data = Match.objects.all()
 
@@ -331,10 +333,12 @@ def matches(request):
 
         client = Client.objects.get(user_id=current_user.id)
 
-        data = Match.objects.filter(client_id=client).filter(confirmed=0).all()
+        #data = Match.objects.filter(client_id=client).filter(confirmed=0).all()
+        data= Pledge.objects.filter(pledge_maker_id=client.id).filter(matched=1).filter(
+            payment_confirm='Unconfirmed').all().select_related('match')
 
-        payee = Pledge.objects.filter(pledge_maker_id=client.id).filter(matched=1).filter(
-            payment_confirm='Unconfirmed').all()
+        payee = Pledge.objects.filter(pledge_receiver=client.id).filter(matched=1).filter(
+            payment_confirm='Unconfirmed').all().select_related('match')
 
 
 
@@ -354,12 +358,13 @@ def matche_confirmed(request, object_id):
 
     client = Client.objects.get(user_id=current_user.id)
 
-    data = Match.objects.filter(id=object_id).get()
+    data = Match.objects.filter(pledge_id=object_id).get()
     # print(data.pledge_id.id)
+    maturity = datetime.now() + timedelta(days=5)
 
-    Pledge.objects.filter(id=data.pledge_id.id).update(payment_confirm='confirmed')
+    Pledge.objects.filter(id=data.pledge_id.id).update(payment_confirm='confirmed',maturity_date=maturity)
 
-    Match.objects.filter(id=object_id).update(confirmed='confirmed', sms=1)
+    Match.objects.filter(pledge_id=object_id).update(confirmed='confirmed', sms=1)
 
     # send sms to matches
     pledgerData = Pledge.objects.filter(id=data.pledge_id.id).get()
@@ -392,13 +397,13 @@ def sendMatchNotification(request):
 
         pledges = Pledge.objects.filter(id=q.pledge_id.id).get()
 
-        receiver = "Hi" + name + "you have been matched to receive payment of GHS" + str(q.amount) + " from " + pledges.pledge_maker_id.firstname + ".  whose mobile money number is " + str(
-            pledges.pledge_maker_id.mobile_money_phone) + " Go to your dashboard for details"
+        receiver = "Hi " + name + ", you have been matched to receive GHS" + str(q.amount) + " from " + pledges.pledge_maker_id.firstname + "(" + str(
+            pledges.pledge_maker_id.mobile_money_phone)+ ")" + ". Go to your dashboard for details"
 
-        payer = "Hi " + pledges.pledge_maker_id.firstname + " You have been matched to fulfil your pledge of GHS" + str(
-            q.amount) + " to " + q.client_id.firstname + " whose mobile money number is " + str(
-            q.client_id.mobile_money_phone) + " on payitgh.com.Deadline for payment is " + str(
-            mature) + " check your dashboard for details"
+        payer = "Hi " + pledges.pledge_maker_id.firstname + ", You have been matched to fulfil your pledge of GHS" + str(
+            q.amount) + " to " + q.client_id.firstname + "(" + str(
+            q.client_id.mobile_money_phone) + ")"  + " on PAYiTGH. Deadline for payment is " + str(
+            mature) + ". Check your dashboard for details"
 
         Match.objects.update(sms=1)
 
@@ -408,3 +413,14 @@ def sendMatchNotification(request):
     messages.success(request, 'sms notifications send successfully')
 
     return redirect('matches')
+
+def clientTransaction(request):
+    current_user = request.user
+    client = Client.objects.get(user_id=current_user.id)
+
+    data = Pledge.objects.filter(Q(pledge_maker_id=client.id) |
+           Q(pledge_receiver=client.id)).all().select_related('match')
+
+
+    return render(request, 'transactions/index.html', {'data': data})
+

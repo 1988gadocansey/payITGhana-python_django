@@ -80,7 +80,7 @@
 
                             <div class="uk-dropdown uk-dropdown-small">
                                 <ul class="uk-nav js-uk-prevent">
-{#                                    <li><a href="{% url 'logout' %}">Change Password</a></li>#}
+                                  <li><a href="{% url 'clientProfile' %}">My Profile</a></li>
                                     <li><a href="{% url 'logout' %}">Logout</a></li>
                                 </ul>
                             </div>
@@ -109,6 +109,7 @@
                                 class="sidebar-menu-icon material-icons md-18">account_balance</i><span>Task</span></a>
                         <div class="uk-dropdown uk-dropdown-scrollable">
                             <ul class="uk-nav uk-nav-dropdown">
+                             <li><a href='{% url 'clientProfile' %}'>My Profile</a></li>
                                 <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
                                 {% if user.is_superuser %}
                                       <li><a href='{% url 'match' %}'>Match Clients</a></li>
@@ -124,6 +125,8 @@
                     <div class="uk-dropdown uk-dropdown-scrollable">
                         <ul class="uk-nav uk-nav-dropdown">
                         <li>
+                        <li><a href='{% url 'transactions' %}'>Transaction History</a></li>
+
                              <li><a href='{% url 'pledges' %}'>My Pledges</a></li>
 
                              {% if user.is_superuser %}
@@ -149,11 +152,15 @@
                                  <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
                                 <li><a href='{% url  'pledges' %}'>My Pledges</a></li>
                                 <li><a href='{% url 'matches' %}'>My Matches</a></li>
+                             <li><a href='{% url 'transactions' %}'>Transaction History</a></li>
+
+
                                  {% if user.is_superuser %}
                                      <li><a href='{% url 'match' %}'>Match Clients</a></li>
                                      <li><a href='{% url 'matches' %}'>View Matches</a></li>
                                  {% endif %}
 
+                             <li><a href="{% url 'clientProfile' %}">My Profile</a></li>
                                  <li><a href="{% url 'logout' %}">Logout</a></li>
                             </ul>
                         </div>

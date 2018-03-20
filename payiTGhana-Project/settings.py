@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'pinax_theme_bootstrap',
     'bootstrapform',
 	#'urlauth'
+"mathfilters"
 
 ]
 if DJANGO_MODE == 'local':
@@ -76,6 +77,7 @@ MIDDLEWARE = [
     "account.middleware.TimezoneMiddleware",
     "account.middleware.ExpiredPasswordMiddleware",
     'django_user_agents.middleware.UserAgentMiddleware',
+
     #'session_security.middleware.SessionSecurityMiddleware',
 
 ]
@@ -160,8 +162,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-#LOGIN_REDIRECT_URL = '/app/dashboard'
-LOGIN_REDIRECT_URL = '/app/client/profile/'
+LOGIN_REDIRECT_URL = '/app/dashboard'
+#LOGIN_REDIRECT_URL = '/app/client/profile/'
 LOGOUT_REDIRECT_URL = '/auth'
 STATIC_ROOT = '/staticfiles'
 ACCOUNT_LOGIN_URL='/auth/'

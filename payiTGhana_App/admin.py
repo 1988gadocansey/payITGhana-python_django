@@ -14,7 +14,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Pledge)
 class PledgeAdmin(admin.ModelAdmin):
-    list_display = ['id','pledge_maker_id','pledged_amount','maturity_date','payment_confirm','created_at','updated_at']
+    list_display = ['id','pledge_maker_id','pledge_receiver_id','pledged_amount','maturity_date','payment_confirm','created_at','updated_at']
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
@@ -26,4 +26,14 @@ class SmsAdmin(admin.ModelAdmin):
 
 @admin.register(Coins)
 class CoinsAdmin(admin.ModelAdmin):
-    list_display = ['id','client_id','amount', 'created_at','updated_at']
+    date_hierarchy = 'created_at'
+    search_fields = ['name', 'phone']
+    list_display = ['id', 'name', 'phone','amount', 'created_at', 'updated_at']
+
+    list_filter = ('created_at',)
+
+    def name(self, obj):
+        return obj.client_id.firstname+" "+obj.client_id.lastname
+
+    def phone(self, obj):
+        return "0"+str(obj.client_id.phone)

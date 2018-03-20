@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load humanize %}
+{% load mathfilters %}
 
 {% load account_tags %}
 {% block style %}
@@ -74,7 +75,7 @@
 
                                         <td>0{{ record.client_id.phone }}</td>
 
-                                        <td>{{ record.amount }}</td>
+                                        <td>{{ record.amount}}</td>
 
 
                                         <td>{{ record.created_at }}</td>
@@ -143,19 +144,20 @@
             {% for record in data %}
 
 
-                    <p class="uk-text-success">You are to pay this clients   </p>
+                    <p class="uk-text-success">You  to pay this client(s)   </p>
                     <div class="uk-alert" role="uk-alert">
-                         <p>Account Holder: {{ record.client_id.phone }}</p>
+                         <p>Account Holder:
+                             {{ record.pledge_receiver.firstname }} {{ record.pledge_receiver.lastname }}
 
-                        <p>Phone number:  0{{ record.client_id.phone }}</p>
-                        <p>Mobile Money Name:
-                            {{ record.client_id.mobile_money_name |capfirst }}
+                         </p>
 
 
-                        </p>
-                        <p>Mobile Money Number : 0{{ record.client_id.mobile_money_phone }}</p>
+                          <p>Phone No:  0{{ record.pledge_receiver.phone }}</p>
 
-                        <p>Amount to recieve: GHS {{ record.amount }}</p>
+                       <p>Mobile Money name:  {{ record.pledge_receiver.mobile_money_name |capfirst }}</p>
+
+                        <p>Mobile Money Number: 0{{ record.pledge_receiver.mobile_money_phone }}</p>
+                        <p>Amount to pay: GHS{{ record.match.amount  }}</p>
 
 
                     </div>
@@ -172,7 +174,7 @@
         {% else %}
              <div class="uk-alert uk-alert-info" role="uk-alert">
 
-            <p class="uk-text-warning">No client to payment</p>
+            <p class="uk-text-warning">No client to pay</p>
              </div>
 
         {% endif %}
@@ -185,7 +187,7 @@
                     <div class="uk-alert" role="uk-alert">
                     <p>Account Holder:
 
-                       {{ row.pledge_id.pledge_maker_id.firstname }} {{ row.pledge_id.pledge_maker_id.lastname }}
+                       {{ row.pledge_maker_id.firstname }} {{ row.pledge_maker_id.lastname }}
 
 
 
@@ -196,19 +198,18 @@
                        <p>Mobile Money name:  {{ row.pledge_maker_id.mobile_money_name |capfirst }}</p>
 
                         <p>Mobile Money Number: 0{{ row.pledge_maker_id.mobile_money_phone }}</p>
-                        <p>Amount to pay: GHS{{ row.pledged_amount }}</p>
+                        <p>Amount to pay: GHS{{ row.match.amount  }}</p>
                          <p>
 
-                            {% if record.confirmed == '0' %}
 
 
                                 <a onclick="return confirm('Are you sure you want to confirm this match ?')"
                                    class="md-btn  md-btn-warning md-btn-small   md-btn-wave-light waves-effect waves-button waves-light"
-                                   href="{% url 'confirmed_matches'  record.id %}">Confirm payment</a>
+                                   href="{% url 'confirmed_matches'  row.id %}">Confirm payment</a>
 
 
 
-                            {% endif %}
+
                         </p>
 
                     </div>

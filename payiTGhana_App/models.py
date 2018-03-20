@@ -42,6 +42,7 @@ class Pledge(models.Model):
     status=models.IntegerField()
     matched=models.IntegerField()
     repledged=models.IntegerField(null=True)
+    pledge_receiver=models.OneToOneField(Client, on_delete=models.CASCADE,related_name="receiver",null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

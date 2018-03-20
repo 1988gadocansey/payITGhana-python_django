@@ -20,8 +20,8 @@ urlpatterns = [
    url(r'^task/bulk/matches/sms$',  views.sendMatchNotification, name='bulknotifications'),
    url(r'^(?P<object_id>[0-9]+)/confirm_match/$',  views.matche_confirmed, name='confirmed_matches'),
    url(r'^(?P<object_id>[0-9]+)/delete_pledge/$',views.delete_pledge, name='delete-pledge'),
-   url(r'^(?P<object_id>[0-9]+)/delete_match/$',views.delete_match, name='delete-match')
+   url(r'^(?P<object_id>[0-9]+)/delete_match/$',views.delete_match, name='delete-match'),
 
-
+   url(r'^client/transactions/$',  views.clientTransaction, name='transactions'),
 ]
 
