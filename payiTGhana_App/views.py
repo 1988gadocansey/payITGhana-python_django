@@ -403,19 +403,23 @@ def sendMatchNotification(request):
         pledges = Pledge.objects.filter(id=q.pledge_id.id).get()
 
         receiver = "Hi " + name + ", you have been matched to receive GHS" + str(q.amount) + " from " + pledges.pledge_maker_id.firstname + "(" + str(
-            pledges.pledge_maker_id.mobile_money_phone)+ ")" + ". Go to your dashboard for details"
+         pledges.pledge_maker_id.mobile_money_phone)+ ")" + ". Go to your dashboard for details"
+
+        #payer = "Hi " + pledges.pledge_maker_id.firstname + ", You have been matched to fulfil your pledge of GHS" + str(
+           # q.amount) + " to " + q.client_id.firstname + "(" + str(
+           # q.client_id.mobile_money_phone) + ")"  + " on PAYiTGH. Deadline for payment is " + str(
+           # mature) + ". Check your dashboard for details"
 
         payer = "Hi " + pledges.pledge_maker_id.firstname + ", You have been matched to fulfil your pledge of GHS" + str(
-            q.amount) + " to " + q.client_id.firstname + "(" + str(
-            q.client_id.mobile_money_phone) + ")"  + " on PAYiTGH. Deadline for payment is " + str(
-            mature) + ". Check your dashboard for details"
+        q.amount) + " to " + q.client_id.firstname + "(" + str(
+        q.client_id.mobile_money_phone) + ")"  + " on PAYiTGH. Check your dashboard for details"
 
         Match.objects.update(sms=1)
 
         send_sms(phone, receiver, current_user.id)
         send_sms(pledges.pledge_maker_id.mobile_money_phone, payer, current_user.id)
 
-    messages.success(request, 'sms notifications send successfully')
+        messages.success(request, 'sms notifications send successfully')
 
     return redirect('matches')
 
