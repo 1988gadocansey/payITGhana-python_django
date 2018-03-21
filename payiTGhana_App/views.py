@@ -88,15 +88,20 @@ def dashboard(request):
         current_user = request.user
 
         client = Client.objects.get(user_id=current_user.id)
-        if(client):
-            pledges = Pledge.objects.filter(pledge_maker_id=client).aggregate(Count('id'))
-            matches = Match.objects.filter(client_id=client).aggregate(Count('id'))
-            coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount'))
-            context = {'client': client, 'pledges': pledges, 'matches': matches, 'coins': coins}
-        else:
+        try:
+            if(client):
+                pledges = Pledge.objects.filter(pledge_maker_id=client).aggregate(Count('id'))
+                matches = Match.objects.filter(client_id=client).aggregate(Count('id'))
+                coins = Coins.objects.filter(client_id=client).aggregate(Sum('amount'))
+                context = {'client': client, 'pledges': pledges, 'matches': matches, 'coins': coins}
+            else:
+                return redirect('clientProfile')
+        except:
+
             return redirect('clientProfile')
+
     except Client.DoesNotExist:
-        raise Http404("Client does not exist")
+        return render(request, 'dashboard/index.html')
     return render(request, 'dashboard/index.html', context)
 
 
