@@ -19,6 +19,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Sum
 from django.db.models import F
 import urllib
+from django.core.mail import send_mail
 
 
 class SignupView(account.views.SignupView):
@@ -433,3 +434,25 @@ def clientTransaction(request):
 
     return render(request, 'transactions/index.html', {'data': data})
 
+
+def topCoin(request):
+    if request.method == "POST":
+        clientData=request.POST.get('client')
+        amount=request.POST.get('amount')
+        client=Client.objects.get(id=clientData)
+        Coins.objects.filter(client_id=client).update(amount=F('amount') + amount)
+
+        message = "Hi " + client.firstname + " your account has been topup with GHC " + amount
+        email=client.email
+        send_mail('Coins topup', message, 'noreply@payitgh.com', [email])
+        messages.success(request, 'Coins topup successfully')
+
+        return redirect('dashboard')
+
+    else:
+        clients = Client.objects.all()
+        context = {'clients': clients }
+
+
+
+    return render(request, 'clients/topup.html', context)

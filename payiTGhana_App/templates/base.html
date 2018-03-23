@@ -112,6 +112,8 @@
                              <li><a href='{% url 'clientProfile' %}'>My Profile</a></li>
                                 <li><a href='{% url 'pledge' %}'>Make Pledge</a></li>
                                 {% if user.is_superuser %}
+
+                                      <li><a href='{% url 'topup' %}'>Top Coins</a></li>
                                       <li><a href='{% url 'match' %}'>Match Clients</a></li>
                                  {% endif %}
 
