@@ -437,14 +437,17 @@ def clientTransaction(request):
 
 def topCoin(request):
     if request.method == "POST":
+        current_user = request.user
         clientData=request.POST.get('client')
         amount=request.POST.get('amount')
         client=Client.objects.get(id=clientData)
         Coins.objects.filter(client_id=client).update(amount=F('amount') + amount)
 
-        message = "Hi " + client.firstname + " your account has been topup with GHC " + amount
+        message = "Hi " + client.firstname + " your account has been topup with " + amount + " COINS. Please check Your Wallet to Confirm. Use the Support for any Assistance"
+
+        send_sms(client.phone, message, current_user.id)
         email=client.email
-        send_mail('Coins topup', message, 'noreply@payitgh.com', [email])
+        send_mail('Coins topup', message, 'payitgh@zoho.com', [email])
         messages.success(request, 'Coins topup successfully')
 
         return redirect('dashboard')
