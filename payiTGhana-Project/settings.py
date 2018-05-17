@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'pinax_theme_bootstrap',
     'bootstrapform',
 	#'urlauth'
-"mathfilters"
+"mathfilters",
+"pinax.referrals",
 
 ]
 if DJANGO_MODE == 'local':
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "pinax.referrals.middleware.SessionJumpingMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',

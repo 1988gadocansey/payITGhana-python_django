@@ -181,7 +181,7 @@ def clientProfile(request):
 def pledge(request):
     if request.method == "POST":
 
-        maturity = datetime.now() + timedelta(days=5)
+        maturity = datetime.now() + timedelta(days=8)
 
         current_user = request.user
         client = Client.objects.get(user_id=current_user.id)
@@ -382,7 +382,7 @@ def matche_confirmed(request, object_id):
     message = "Hi " + name + " your payment of  GHS" + str(
         data.amount) + " to " + client.firstname + " has been confirmed successfully" \
                                                    "" \
-                                                   ".Your return is between 1-5days";
+                                                   ".Your return is between 1-8days";
 
     send_sms(phone, message, current_user.id)
 

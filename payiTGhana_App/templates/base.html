@@ -158,6 +158,7 @@
 
 
                                  {% if user.is_superuser %}
+                                      <li><a href='{% url 'topup' %}'>Top Coins</a></li>
                                      <li><a href='{% url 'match' %}'>Match Clients</a></li>
                                      <li><a href='{% url 'matches' %}'>View Matches</a></li>
                                  {% endif %}

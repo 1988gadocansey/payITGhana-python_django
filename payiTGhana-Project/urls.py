@@ -30,6 +30,7 @@ url(r'^logout/$', auth_views.logout, {'next_page': '/auth'}, name='logout'),
     url(r'^auth/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('app/', include('payiTGhana_App.urls')),
     url(r"^account/", include("account.urls")),
+url(r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")),
 
 ]
 
